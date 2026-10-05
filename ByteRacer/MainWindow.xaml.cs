@@ -14,7 +14,9 @@ namespace ByteRacer
             ShowStart();
         }
 
-        public void ShowStart() => PageHost.Content = new StartPage();
+        public void ShowStart() => PageHost.Content = new StartPage(this);
+        public void ShowGame() => PageHost.Content = new GamePage(this);
+        public void ShowLeaderboard() => PageHost.Content = new LeaderboardPage(this);
         public void ShowNameEntry() => PageHost.Content = new NameEntryPage(this);
     }
 }

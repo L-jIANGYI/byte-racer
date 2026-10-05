@@ -18,9 +18,13 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class StartPage : UserControl
     {
-        public StartPage()
+        private readonly MainWindow _main;
+
+        public StartPage(MainWindow main)
         {
             InitializeComponent();
+
+            _main = main;
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)

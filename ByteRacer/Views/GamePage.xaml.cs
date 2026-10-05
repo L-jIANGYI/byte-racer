@@ -18,9 +18,12 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class GamePage : UserControl
     {
-        public GamePage()
+        private readonly MainWindow _main;
+
+        public GamePage(MainWindow main)
         {
             InitializeComponent();
+            _main = main;
         }
     }
 }

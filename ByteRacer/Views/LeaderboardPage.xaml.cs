@@ -18,9 +18,12 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class LeaderboardPage : UserControl
     {
-        public LeaderboardPage()
+        private readonly MainWindow _main;
+
+        public LeaderboardPage(MainWindow main)
         {
             InitializeComponent();
+            _main = main;
         }
     }
 }
