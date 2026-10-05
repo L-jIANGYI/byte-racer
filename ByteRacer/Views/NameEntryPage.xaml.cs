@@ -25,5 +25,10 @@ namespace ByteRacer.Views
             InitializeComponent();
             _main = main;
         }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            _main.ShowStart();
+        }
     }
 }
