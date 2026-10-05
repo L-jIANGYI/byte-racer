@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Images\" />
+    <Folder Include="Assets\Images\Icons\" />
     <Folder Include="Assets\Sounds\" />
   </ItemGroup>
 

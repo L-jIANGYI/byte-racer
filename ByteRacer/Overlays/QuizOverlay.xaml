@@ -5,8 +5,123 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ByteRacer.Overlays"
              mc:Ignorable="d" 
+             FontFamily="{StaticResource PixelFont}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PanelBrush"       Color="#B2B2B2"/>
+        <SolidColorBrush x:Key="PanelBorderBrush" Color="#2A2A2A"/>
+        <SolidColorBrush x:Key="BoxBrush"         Color="#38000000"/>
+        <SolidColorBrush x:Key="BoxHoverBrush"    Color="#50000000"/>
+        <SolidColorBrush x:Key="BoxPressedBrush"  Color="#70000000"/>
+        <SolidColorBrush x:Key="BoxEdgeBrush"     Color="#22000000"/>
+        <SolidColorBrush x:Key="InkBrush"         Color="#000000"/>
+
+        <Style x:Key="PixelBox" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource BoxBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BoxEdgeBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style x:Key="AnswerButton" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{StaticResource BoxBrush}"
+                                BorderBrush="{StaticResource BoxEdgeBrush}"
+                                BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background"
+                                        Value="{StaticResource BoxHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background"
+                                        Value="{StaticResource BoxPressedBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Margin="80,40"
+            Background="{StaticResource PanelBrush}"
+            BorderBrush="{StaticResource PanelBorderBrush}"
+            BorderThickness="2"
+            Padding="16">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.25"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" MinHeight="64"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="0"
+            Style="{StaticResource PixelBox}"
+            Width="65" Height="65"
+            HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Image Source="/Assets/Images/Icons/python.png"
+                Name="LangImage"
+                RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            </Border>
+
+            <Border Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource PixelBox}"
+                    Margin="0,0,0,0" Padding="12,8">
+                <TextBlock x:Name="QuestionText"
+                           Text="QUESTION"
+                           FontSize="24"
+                           Foreground="{StaticResource InkBrush}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"/>
+            </Border>
+
+            <Border Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource PixelBox}"
+                    Width="65" Height="65"
+                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Image Source="/Assets/Images/Icons/spdbst.png"
+                       Name="PwrUpImage"
+                       Margin="1"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            </Border>
+
+            <Grid Grid.Row="1" Grid.Column="1" Margin="0,4,0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Button x:Name="Answer1" Grid.Row="0" Content="ANSWER1"
+                        Style="{StaticResource AnswerButton}" Margin="0,7,0,7" Click="Click_Ans1"/>
+                <Button x:Name="Answer2" Grid.Row="1" Content="ANSWER2"
+                        Style="{StaticResource AnswerButton}" Margin="0,7" Click="Click_Ans2"/>
+                <Button x:Name="Answer3" Grid.Row="2" Content="ANSWER3"
+                        Style="{StaticResource AnswerButton}" Margin="0,7,0,7" Click="Click_Ans3"/>
+            </Grid>
+        </Grid>
+    </Border>
 </UserControl>

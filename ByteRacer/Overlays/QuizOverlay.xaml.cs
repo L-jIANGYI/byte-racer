@@ -22,5 +22,20 @@ namespace ByteRacer.Overlays
         {
             InitializeComponent();
         }
+
+        private void Click_Ans1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Click_Ans2(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Click_Ans3(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
