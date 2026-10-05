@@ -23,12 +23,15 @@ namespace ByteRacer.Views
             InitializeComponent();
         }
 
-
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            var main = (MainWindow)Application.Current.MainWindow;
+            main.ShowNameEntry();
+        }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
-
     }
 }

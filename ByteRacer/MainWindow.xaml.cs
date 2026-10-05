@@ -15,5 +15,6 @@ namespace ByteRacer
         }
 
         public void ShowStart() => PageHost.Content = new StartPage();
+        public void ShowNameEntry() => PageHost.Content = new NameEntryPage(this);
     }
 }

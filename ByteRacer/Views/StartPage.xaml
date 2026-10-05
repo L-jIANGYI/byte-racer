@@ -33,7 +33,7 @@
                        Margin="0,0,0,30"/>
 
 
-            <Button Content="Start Game" FontWeight="Bold" Width="150" Height="40" Margin="0,5"/>
+            <Button Content="Start Game" FontWeight="Bold" Width="150" Height="40" Margin="0,5" Click="StartButton_Click"/>
             <Button Content="Leaderboard" FontWeight="Bold" Width="150" Height="40" Margin="0,5"/>
             <Button Content="Settings" FontWeight="Bold" Width="150" Height="40" Margin="0,5"/>
             <Button Content="Info" FontWeight="Bold" Width="80" Height="40" Margin="0,5"/>
