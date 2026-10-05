@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ByteRacer.Views"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" FontFamily ="{StaticResource PixelFont}">
     <UserControl.Resources>
         <Style TargetType="Button">
             <Style.Resources>
@@ -23,6 +23,8 @@
                        FontWeight="Bold"
                        HorizontalAlignment="Center"
                        Margin="0,0,0,30"/>
+
+
             <Button Content="Start Game" FontWeight="Bold" Width="150" Height="40" Margin="0,5"/>
             <Button Content="Leaderboard" FontWeight="Bold" Width="150" Height="40" Margin="0,5"/>
             <Button Content="Settings" FontWeight="Bold" Width="150" Height="40" Margin="0,5"/>
