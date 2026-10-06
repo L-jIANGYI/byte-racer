@@ -7,6 +7,156 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="2"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+
+        <Button
+    Content="&lt;"
+    FontSize="24"
+    Width="50"
+    Height="50"/>
+
+        <!-- Titel -->
+        <TextBlock
+        Text="Leaderboard"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="32"
+        Grid.Row="0"
+        Grid.Column="1"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <!-- Headers -->
+        <TextBlock
+        Text="Rank"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="20"
+        Grid.Row="1"
+        Grid.Column="0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <TextBlock
+        Text="Gebruikersnaam"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="20"
+        Grid.Row="1"
+        Grid.Column="1"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <TextBlock
+        Text="Tijd"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="20"
+        Grid.Row="1"
+        Grid.Column="2"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <!-- Lijn -->
+        <Rectangle
+        Grid.Row="2"
+        Grid.Column="0"
+        Grid.ColumnSpan="3"
+        Height="2"
+        Fill="White"/>
+
+        <!-- Rank 1 -->
+        <TextBlock
+        Text="1"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="3"
+        Grid.Column="0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <TextBlock
+        Text="Gebruikersnaam 1"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="3"
+        Grid.Column="1"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <TextBlock
+        Text="00:42"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="3"
+        Grid.Column="2"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <!-- Rank 2 -->
+        <TextBlock
+        Text="2"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="4"
+        Grid.Column="0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <TextBlock
+        Text="Gebruikersnaam 2"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="4"
+        Grid.Column="1"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <TextBlock
+        Text="00:57"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="4"
+        Grid.Column="2"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <!-- Rank 3 -->
+        <TextBlock
+        Text="3"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="5"
+        Grid.Column="0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <TextBlock
+        Text="Gebruikersnaam 3"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="5"
+        Grid.Column="1"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
+        <TextBlock
+        Text="01:13"
+        FontFamily="./Fonts/#Press Start 2P"
+        FontSize="18"
+        Grid.Row="5"
+        Grid.Column="2"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"/>
+
     </Grid>
 </UserControl>
