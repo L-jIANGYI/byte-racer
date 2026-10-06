@@ -9,15 +9,10 @@
              Unloaded="OnUnloaded">
     <Grid>
         <Canvas x:Name="World" Background="DarkGreen" ClipToBounds="True">
-            <Rectangle x:Name="RedBox" Width="40" Height="40" Fill="Red" Canvas.Top="150"/>
-            <Rectangle x:Name="YellowBox" Width="40" Height="40" Fill="Yellow" Canvas.Top="250"/>
+            <Rectangle x:Name="RedBox" Width="40" Height="40" Fill="Red"/>
         </Canvas>
 
-        <StackPanel Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16"/>
-            <CheckBox x:Name="LagCheckBox" Content="test lag" Foreground="White"
-                      Focusable="False" Margin="0,10,0,0"/>
-        </StackPanel>
+        <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
     
 </UserControl>
