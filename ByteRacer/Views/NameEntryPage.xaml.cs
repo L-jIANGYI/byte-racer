@@ -18,9 +18,12 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class NameEntryPage : UserControl
     {
-        public NameEntryPage()
+        private readonly MainWindow _main;
+
+        public NameEntryPage(MainWindow main)
         {
             InitializeComponent();
+            _main = main;
         }
     }
 }
