@@ -8,11 +8,36 @@
              d:DesignHeight="450" d:DesignWidth="800" d:FontFamily  ="{StaticResource PixelFont}">
     <UserControl.Resources>
         <Style TargetType="Button">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="10"/>
-                </Style>
-            </Style.Resources>
+            <Setter Property="Background" Value="#FFCC00"/>
+            <Setter Property="Foreground" Value="#1E1E1E"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid RenderOptions.EdgeMode="Aliased">
+                            <Grid Margin="4,4,0,0">
+                                <Border Background="#7A5C00" Margin="4,0"/>
+                                <Border Background="#7A5C00" Margin="0,4"/>
+                            </Grid>
+                            <Grid x:Name="face" Margin="0,0,4,4">
+                                <Border Background="{TemplateBinding Background}" Margin="4,0"/>
+                                <Border Background="{TemplateBinding Background}" Margin="0,4"/>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFE066"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="face" Property="Margin" Value="4,4,0,0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
     <Grid Background="#1E1E1E">
@@ -28,18 +53,18 @@
             <TextBlock Text="BYTE RACER"
                        Foreground="White"
                        FontSize="48"
-                       FontWeight="Bold"
                        HorizontalAlignment="Center"
                        Margin="0,0,0,30"/>
 
 
-            <Button Content="Start Game" FontWeight="Bold" Width="150" Height="40" Margin="0,5" Click="StartButton_Click"/>
-            <Button Content="Leaderboard" FontWeight="Bold" Width="150" Height="40" Margin="0,5"/>
-            <Button Content="Settings" FontWeight="Bold" Width="150" Height="40" Margin="0,5"/>
-            <Button Content="Info" FontWeight="Bold" Width="80" Height="40" Margin="0,5"/>
+            <Button Content="Start Game"  Width="150" Height="40" Margin="0,5" Click="StartButton_Click"/>
+            <Button Content="Leaderboard"  Width="150" Height="40" Margin="0,5"/>
+            <Button Content="Settings"  Width="150" Height="40" Margin="0,5"/>
+            <Button Content="Info"  Width="80" Height="40" Margin="0,5"/>
         </StackPanel>
 
-        <Button Content="Exit" FontWeight="Bold" Width="60" Height="30"
+        <Button Content="Exit"  Width="60" Height="30"
+                
                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Click="ExitButton_Click"/>
     </Grid>
 </UserControl>
