@@ -78,7 +78,7 @@
             <Button Content="Play" FontSize="14" Width="120" Height="40"/>
         </StackPanel>
 
-        <Button Content="Exit" FontSize="12" Width="70" Height="30"
+        <Button Content="Back" FontSize="12" Width="70" Height="30"
            
                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
                 Click="ExitButton_Click"/>

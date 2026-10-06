@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ByteRacer.Views"
+             xmlns:overlays="clr-namespace:ByteRacer.Overlays"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" d:FontFamily  ="{StaticResource PixelFont}">
     <UserControl.Resources>
@@ -52,19 +53,20 @@
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="BYTE RACER"
                        Foreground="White"
-                       FontSize="48"
+                       FontSize="52"
                        HorizontalAlignment="Center"
                        Margin="0,0,0,30"/>
 
 
-            <Button Content="Start Game"  Width="150" Height="40" Margin="0,5" Click="StartButton_Click"/>
-            <Button Content="Leaderboard"  Width="150" Height="40" Margin="0,5"/>
-            <Button Content="Settings"  Width="150" Height="40" Margin="0,5"/>
-            <Button Content="Info"  Width="80" Height="40" Margin="0,5"/>
+            <Button Content="Start Game"  Width="250" Height="40" Margin="0,5" Click="StartButton_Click"/>
+            <Button Content="Leaderboard"  Width="250" Height="40" Margin="0,5" Click="LeaderboardButton_Click"/>
+            <Button Content="Settings"  Width="250" Height="40" Margin="0,5"/>
+            <Button Content="Info"  Width="250" Height="40" Margin="0,5" Click="InfoButton_Click"/>
         </StackPanel>
 
-        <Button Content="Exit"  Width="60" Height="30"
-                
+        <Button Content="Exit"  Width="100" Height="40"
                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Click="ExitButton_Click"/>
+
+        <overlays:InfoOverlay x:Name="InfoPanel" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

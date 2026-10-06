@@ -5,8 +5,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ByteRacer.Overlays"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             d:DesignHeight="450" d:DesignWidth="800" d:FontFamily  ="{StaticResource PixelFont}">
+    <Grid Background="#E6000000">
+
+        <Button Content="Close" FontSize="12" Width="90" Height="40"
+            HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
+            Click="CloseButton_Click"/>
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="600">
+            <TextBlock Text="INFO"
+                   Foreground="White"
+                   FontSize="32"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,30"/>
+            <TextBlock Text="Placeholder text. dit is placeholder text om te kijken hoe het er uit ziet."
+                   Foreground="White"
+                   FontSize="14"
+                   LineHeight="28"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </UserControl>
