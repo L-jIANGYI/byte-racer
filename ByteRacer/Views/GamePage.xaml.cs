@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using ByteRacer.Game;
 
 namespace ByteRacer.Views
 {
@@ -19,14 +20,11 @@ namespace ByteRacer.Views
         private TimeSpan _lastRenderingTime;
 
         // Key
-        private Window? _window;
         private readonly HashSet<Key> _pressedKeys = new HashSet<Key>();
 
-        // Test Box
-        private double _boxX = 200;
-        private double _boxY = 200;
-        private const double BoxSpeed = 300;
-        private bool _boxIsBlue;
+        // Car
+        private readonly Car _car = new Car();
+        private const double MetersPerPixel = 0.1;
 
         public GamePage(MainWindow main)
         {
@@ -36,13 +34,13 @@ namespace ByteRacer.Views
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _window = Window.GetWindow(this);
-            if (_window != null)
-            {
-                _window.KeyDown += OnKeyDown;
-                _window.KeyUp += OnKeyUp;
-                _window.Deactivated += OnWindowDeactivated;
-            }
+            _car.X = World.ActualWidth / 2;
+            _car.Y = World.ActualHeight / 2;
+            _car.Angle = 0;
+
+            _main.KeyDown += OnKeyDown;
+            _main.KeyUp += OnKeyUp;
+            _main.Deactivated += OnWindowDeactivated;
 
             _clock.Start();
             _lastFrameTime = _clock.Elapsed;
@@ -53,41 +51,21 @@ namespace ByteRacer.Views
         {
             CompositionTarget.Rendering -= OnFrame;
 
-            if (_window != null)
-            {
-                _window.KeyDown -= OnKeyDown;
-                _window.KeyUp -= OnKeyUp;
-                _window.Deactivated -= OnWindowDeactivated;
-            }
+            _main.KeyDown -= OnKeyDown;
+            _main.KeyUp -= OnKeyUp;
+            _main.Deactivated -= OnWindowDeactivated;
 
             _clock.Stop();
             _pressedKeys.Clear();
         }
 
-        private void OnKeyDown(object? sender, KeyEventArgs e)
-        {
-            _pressedKeys.Add(e.Key);
+        private void OnKeyDown(object? sender, KeyEventArgs e) => _pressedKeys.Add(e.Key);
 
-            if (e.IsRepeat) return;
+        private void OnKeyUp(object? sender, KeyEventArgs e) => _pressedKeys.Remove(e.Key);
 
-            if (e.Key == Key.Space)
-            {
-                _boxIsBlue = !_boxIsBlue;
-                RedBox.Fill = _boxIsBlue ? Brushes.Blue : Brushes.Red;
-            }
-        }
-
-        private void OnKeyUp(object? sender, KeyEventArgs e)
-        {
-            _pressedKeys.Remove(e.Key);
-        }
+        private void OnWindowDeactivated(object? sender, EventArgs e) => _pressedKeys.Clear();
 
         private bool IsDown(Key a, Key b) => _pressedKeys.Contains(a) || _pressedKeys.Contains(b);
-
-        private void OnWindowDeactivated(object? sender, EventArgs e)
-        {
-            _pressedKeys.Clear();
-        }
 
         private void OnFrame(object? sender, EventArgs e)
         {
@@ -100,25 +78,43 @@ namespace ByteRacer.Views
             _lastFrameTime = now;
             if (dt > 0.05) dt = 0.05;
 
-            bool up = IsDown(Key.Up, Key.W);
-            bool down = IsDown(Key.Down, Key.S);
-            bool left = IsDown(Key.Left, Key.A);
-            bool right = IsDown(Key.Right, Key.D);
+            CarInput input = ReadInput();
 
-            if (up) _boxY -= BoxSpeed * dt;
-            if (down) _boxY += BoxSpeed * dt;
-            if (left) _boxX -= BoxSpeed * dt;
-            if (right) _boxX += BoxSpeed * dt;
+            _car.Update(dt, input, true);
+            KeepCarOnScreen();
 
-            // Zorg dat blok binnen de wereld is. Math.Max voorkomt bug en zorg dat minimaal 0 is.
-            _boxY = Math.Clamp(_boxY, 0, Math.Max(0, (World.ActualHeight - RedBox.Height)));
-            _boxX = Math.Clamp(_boxX, 0, Math.Max(0, (World.ActualWidth - RedBox.Width)));
+            DrawCar();
+        }
 
-            Canvas.SetTop(RedBox, _boxY);
-            Canvas.SetLeft(RedBox, _boxX);
+        private CarInput ReadInput() => new CarInput(
+            Gas: IsDown(Key.Up, Key.W),
+            Brake: IsDown(Key.Down, Key.S),
+            Left: IsDown(Key.Left, Key.A),
+            Right: IsDown(Key.Right, Key.D));
 
-            DebugText.Text = $"dt    {dt:0.0000} s\n" +
-                             $"Keys {string.Join(",", _pressedKeys)}";
+
+        private void KeepCarOnScreen()
+        {
+            double maxX = World.ActualWidth;
+            double maxY = World.ActualHeight;
+
+            if (_car.X < 0 || _car.X > maxX || _car.Y < 0 || _car.Y > maxY)
+            {
+                _car.X = Math.Clamp(_car.X, 0, maxX);
+                _car.Y = Math.Clamp(_car.Y, 0, maxY);
+            }
+        }
+
+        private void DrawCar()
+        {
+            Canvas.SetLeft(CarVisual, _car.X - CarVisual.Width / 2);
+            Canvas.SetTop(CarVisual, _car.Y - CarVisual.Height / 2);
+            CarRotation.Angle = _car.Angle;
+
+            double kmh = Math.Abs(_car.Speed) * MetersPerPixel * 3.6;
+            DebugText.Text = $"speed  {_car.Speed,6:0} px/s   {kmh:0} km/h\n" +
+                             $"angle  {_car.Angle,6:0}°\n" +
+                             $"pos    {_car.X:0}, {_car.Y:0}";
         }
     }
 }
