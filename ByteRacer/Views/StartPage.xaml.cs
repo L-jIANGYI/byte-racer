@@ -42,5 +42,9 @@ namespace ByteRacer.Views
         {
             Application.Current.Shutdown();
         }
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPanel.Visibility = Visibility.Visible;
+        }
     }
 }

@@ -6,7 +6,18 @@
              xmlns:local="clr-namespace:ByteRacer.Overlays"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    <Grid Background="#CC000000">
+
+        <Button Content="Back" FontSize="12" Width="90" Height="40"
+            HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
+            Click="BackButton_Click"/>
+
+        <TextBlock Text="SETTINGS"
+               Foreground="White"
+               FontSize="32"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               Margin="0,80,0,0"/>
+
     </Grid>
 </UserControl>
