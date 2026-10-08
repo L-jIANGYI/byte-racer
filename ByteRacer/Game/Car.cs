@@ -16,6 +16,7 @@
         // Question Effect
         public double SpeedMultiplier { get; private set; } = 1;
         public double EffectTimeLeft { get; private set; }
+        public bool HasEffect => EffectTimeLeft > 0;
 
         // Parameters
         public double MaxSpeed { get; set; } = 450;
@@ -28,15 +29,7 @@
 
         public void Update(double dt, CarInput input, bool onTrack)
         {
-            if (EffectTimeLeft > 0)
-            {
-                EffectTimeLeft -= dt;
-                if (EffectTimeLeft <= 0)
-                {
-                    EffectTimeLeft = 0;
-                    SpeedMultiplier = 1;
-                }
-            }
+            UpdateEffect(dt);
 
             if (input.Gas)
             {
@@ -64,6 +57,18 @@
             double radians = Angle * Math.PI / 180;
             X += Math.Cos(radians) * Speed * dt;
             Y += Math.Sin(radians) * Speed * dt;
+        }
+
+        private void UpdateEffect(double dt)
+        {
+            if (HasEffect) return;
+
+            EffectTimeLeft -= dt;
+            if (EffectTimeLeft <= 0)
+            {
+                EffectTimeLeft = 0;
+                SpeedMultiplier = 1;
+            }
         }
 
         public void ApplyEffect(double speedMultiplier, double seconds)

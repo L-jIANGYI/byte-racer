@@ -76,8 +76,11 @@ namespace ByteRacer.Views
 
             // voor vragen beloning later: test speelboost en afremmen 
             if (e.IsRepeat) return;
-            if (e.Key == Key.B) _car.ApplyEffect(1.5, 3);
-            if (e.Key == Key.N) _car.ApplyEffect(0.5, 3);
+            switch (e.Key)
+            {
+                case Key.B: _car.ApplyEffect(1.5, 3); break;
+                case Key.N: _car.ApplyEffect(0.5, 3); break;
+            }
         }
 
         private void OnKeyUp(object? sender, KeyEventArgs e) => _pressedKeys.Remove(e.Key);
@@ -103,9 +106,7 @@ namespace ByteRacer.Views
             _lastFrameTime = now;
             if (dt > 0.05) dt = 0.05;
 
-            CarInput input = ReadInput();
-
-            _car.Update(dt, input, true);
+            _car.Update(dt, ReadInput(), true);
             KeepCarInWorld();
 
             DrawCar();
