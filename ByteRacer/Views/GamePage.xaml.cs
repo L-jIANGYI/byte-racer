@@ -14,10 +14,11 @@ namespace ByteRacer.Views
     {
         private readonly MainWindow _main;
 
-        // World
-        private const double MetersPerPixel = 0.1;
+        // Settings
         private const double WorldWidth = 3000;
         private const double WorldHeight = 2000;
+        private const double MetersPerPixel = 0.1;
+        private const double CameraFollowSpeed = 8;
 
         // Game loop
         private readonly Stopwatch _clock = new Stopwatch();
@@ -45,6 +46,8 @@ namespace ByteRacer.Views
             _car.Y = WorldHeight / 2;
             _car.Angle = 0;
             _car.Speed = 0;
+
+            UpdateCamera(0, true);
 
             _main.KeyDown += OnKeyDown;
             _main.KeyUp += OnKeyUp;
@@ -106,7 +109,7 @@ namespace ByteRacer.Views
             KeepCarInWorld();
 
             DrawCar();
-            UpdateCamera();
+            UpdateCamera(dt);
             DrawDebug();
         }
 
@@ -129,10 +132,21 @@ namespace ByteRacer.Views
             CarRotation.Angle = _car.Angle;
         }
 
-        private void UpdateCamera()
+        private void UpdateCamera(double dt, bool snap = false)
         {
-            Camera.X = Viewport.ActualWidth / 2 - _car.X;
-            Camera.Y = Viewport.ActualHeight / 2 - _car.Y;
+            double targetX = Viewport.ActualWidth / 2 - _car.X;
+            double targetY = Viewport.ActualHeight / 2 - _car.Y;
+
+            if (snap)
+            {
+                Camera.X = targetX;
+                Camera.Y = targetY;
+                return;
+            }
+
+            double t = 1 - Math.Exp(-CameraFollowSpeed * dt);
+            Camera.X += (targetX - Camera.X) * t;
+            Camera.Y += (targetY - Camera.Y) * t;
         }
 
         private void DrawDebug()
