@@ -41,7 +41,7 @@
             </Canvas>
         </Canvas>
 
-        <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
     
 </UserControl>

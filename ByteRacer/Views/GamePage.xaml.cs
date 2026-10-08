@@ -14,6 +14,11 @@ namespace ByteRacer.Views
     {
         private readonly MainWindow _main;
 
+        // World
+        private const double MetersPerPixel = 0.1;
+        private const double WorldWidth = 3000;
+        private const double WorldHeight = 2000;
+
         // Game loop
         private readonly Stopwatch _clock = new Stopwatch();
         private TimeSpan _lastFrameTime;
@@ -24,11 +29,6 @@ namespace ByteRacer.Views
 
         // Car
         private readonly Car _car = new Car();
-        private const double MetersPerPixel = 0.1;
-
-        // World
-        private const double WorldWidth = 3000;
-        private const double WorldHeight = 2000;
 
         public GamePage(MainWindow main)
         {
@@ -41,9 +41,10 @@ namespace ByteRacer.Views
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _car.X = 1500;
-            _car.Y = 1000;
+            _car.X = WorldWidth / 2;
+            _car.Y = WorldHeight / 2;
             _car.Angle = 0;
+            _car.Speed = 0;
 
             _main.KeyDown += OnKeyDown;
             _main.KeyUp += OnKeyUp;
@@ -66,13 +67,27 @@ namespace ByteRacer.Views
             _pressedKeys.Clear();
         }
 
-        private void OnKeyDown(object? sender, KeyEventArgs e) => _pressedKeys.Add(e.Key);
+        private void OnKeyDown(object? sender, KeyEventArgs e)
+        {
+            _pressedKeys.Add(e.Key);
+
+            // voor vragen beloning later: test speelboost en afremmen 
+            if (e.IsRepeat) return;
+            if (e.Key == Key.B) _car.ApplyEffect(1.5, 3);
+            if (e.Key == Key.N) _car.ApplyEffect(0.5, 3);
+        }
 
         private void OnKeyUp(object? sender, KeyEventArgs e) => _pressedKeys.Remove(e.Key);
 
         private void OnWindowDeactivated(object? sender, EventArgs e) => _pressedKeys.Clear();
 
         private bool IsDown(Key a, Key b) => _pressedKeys.Contains(a) || _pressedKeys.Contains(b);
+
+        private CarInput ReadInput() => new CarInput(
+            Gas: IsDown(Key.Up, Key.W),
+            Brake: IsDown(Key.Down, Key.S),
+            Left: IsDown(Key.Left, Key.A),
+            Right: IsDown(Key.Right, Key.D));
 
         private void OnFrame(object? sender, EventArgs e)
         {
@@ -91,14 +106,9 @@ namespace ByteRacer.Views
             KeepCarInWorld();
 
             DrawCar();
+            UpdateCamera();
+            DrawDebug();
         }
-
-        private CarInput ReadInput() => new CarInput(
-            Gas: IsDown(Key.Up, Key.W),
-            Brake: IsDown(Key.Down, Key.S),
-            Left: IsDown(Key.Left, Key.A),
-            Right: IsDown(Key.Right, Key.D));
-
 
         private void KeepCarInWorld()
         {
@@ -117,14 +127,20 @@ namespace ByteRacer.Views
             Canvas.SetLeft(CarVisual, _car.X - CarVisual.Width / 2);
             Canvas.SetTop(CarVisual, _car.Y - CarVisual.Height / 2);
             CarRotation.Angle = _car.Angle;
+        }
 
+        private void UpdateCamera()
+        {
             Camera.X = Viewport.ActualWidth / 2 - _car.X;
             Camera.Y = Viewport.ActualHeight / 2 - _car.Y;
+        }
 
+        private void DrawDebug()
+        {
             double kmh = Math.Abs(_car.Speed) * MetersPerPixel * 3.6;
             DebugText.Text = $"speed  {_car.Speed,6:0} px/s   {kmh:0} km/h\n" +
-                             $"angle  {_car.Angle,6:0}°\n" +
-                             $"pos    {_car.X:0}, {_car.Y:0}";
+                             $"SpeelMultiplier {_car.SpeedMultiplier}\n" +
+                             $"EffectTimeLeft {_car.EffectTimeLeft}";
         }
     }
 }
