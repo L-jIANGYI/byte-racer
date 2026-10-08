@@ -26,16 +26,23 @@ namespace ByteRacer.Views
         private readonly Car _car = new Car();
         private const double MetersPerPixel = 0.1;
 
+        // World
+        private const double WorldWidth = 3000;
+        private const double WorldHeight = 2000;
+
         public GamePage(MainWindow main)
         {
             InitializeComponent();
             _main = main;
+
+            World.Width = WorldWidth;
+            World.Height = WorldHeight;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _car.X = World.ActualWidth / 2;
-            _car.Y = World.ActualHeight / 2;
+            _car.X = 1500;
+            _car.Y = 1000;
             _car.Angle = 0;
 
             _main.KeyDown += OnKeyDown;
@@ -81,7 +88,7 @@ namespace ByteRacer.Views
             CarInput input = ReadInput();
 
             _car.Update(dt, input, true);
-            KeepCarOnScreen();
+            KeepCarInWorld();
 
             DrawCar();
         }
@@ -93,10 +100,10 @@ namespace ByteRacer.Views
             Right: IsDown(Key.Right, Key.D));
 
 
-        private void KeepCarOnScreen()
+        private void KeepCarInWorld()
         {
-            double maxX = World.ActualWidth;
-            double maxY = World.ActualHeight;
+            double maxY = WorldHeight;
+            double maxX = WorldWidth;
 
             if (_car.X < 0 || _car.X > maxX || _car.Y < 0 || _car.Y > maxY)
             {
@@ -110,6 +117,9 @@ namespace ByteRacer.Views
             Canvas.SetLeft(CarVisual, _car.X - CarVisual.Width / 2);
             Canvas.SetTop(CarVisual, _car.Y - CarVisual.Height / 2);
             CarRotation.Angle = _car.Angle;
+
+            Camera.X = Viewport.ActualWidth / 2 - _car.X;
+            Camera.Y = Viewport.ActualHeight / 2 - _car.Y;
 
             double kmh = Math.Abs(_car.Speed) * MetersPerPixel * 3.6;
             DebugText.Text = $"speed  {_car.Speed,6:0} px/s   {kmh:0} km/h\n" +

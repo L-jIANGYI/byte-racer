@@ -4,19 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" d:Background="White"
+             d:DesignHeight="2000" d:DesignWidth="3000 " d:Background="White"
              Loaded="OnLoaded"
              Unloaded="OnUnloaded">
     <Grid>
-        <Canvas x:Name="World" Background="DarkGreen" ClipToBounds="True">
+        <Canvas x:Name="Viewport" Background="Aqua" ClipToBounds="True">
 
-            <Grid x:Name="CarVisual" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
-                <Grid.RenderTransform>
-                    <RotateTransform x:Name="CarRotation"></RotateTransform>
-                </Grid.RenderTransform>
-                <Border Background="Red" CornerRadius="5"></Border>
-                <Border Background="DarkGray" Width="7" HorizontalAlignment="Right" Margin="0,3,7,3" CornerRadius="2"></Border>
-            </Grid>
+            <Canvas x:Name="World">
+
+                <Canvas.Background>
+                    <DrawingBrush TileMode="Tile" Viewport="0,0,100,100" ViewportUnits="Absolute">
+                        <DrawingBrush.Drawing>
+                            <GeometryDrawing Brush="#3A7D44">
+                                <GeometryDrawing.Pen>
+                                    <Pen Brush="#4C8F55" Thickness="2"/>
+                                </GeometryDrawing.Pen>
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0,100,100"/>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Canvas.Background>
+
+                <Canvas.RenderTransform>
+                    <TranslateTransform x:Name="Camera"/>
+                </Canvas.RenderTransform>
+
+                <Grid x:Name="CarVisual" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <RotateTransform x:Name="CarRotation"></RotateTransform>
+                    </Grid.RenderTransform>
+                    <Border Background="Red" CornerRadius="5"></Border>
+                    <Border Background="DarkGray" Width="7" HorizontalAlignment="Right" Margin="0,3,7,3" CornerRadius="2"></Border>
+                </Grid>
+            </Canvas>
         </Canvas>
 
         <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
