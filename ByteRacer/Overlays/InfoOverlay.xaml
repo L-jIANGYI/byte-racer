@@ -12,18 +12,40 @@
             HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
             Click="CloseButton_Click"/>
 
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="600">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="650">
+
             <TextBlock Text="INFO"
-                   Foreground="White"
-                   FontSize="32"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,30"/>
-            <TextBlock Text="Placeholder text. dit is placeholder text om te kijken hoe het er uit ziet."
-                   Foreground="White"
-                   FontSize="14"
-                   LineHeight="28"
-                   TextWrapping="Wrap"
-                   TextAlignment="Center"/>
+               Foreground="White"
+               FontSize="42"
+               HorizontalAlignment="Center"
+               Margin="0,0,0,25"/>
+
+            <TextBlock Text="Byte Racer is een racegame van bovenaf. Rij zo snel mogelijk naar de finish."
+               Foreground="White"
+               FontSize="12"
+               LineHeight="24"
+               TextWrapping="Wrap"
+               TextAlignment="Center"
+               Margin="0,0,0,20"/>
+
+            <TextBlock Text="Onderweg krijg je op bepaalde plekken een vraag. Heb je het goed, dan krijg je een speed boost. Heb je het fout, dan word je vertraagd."
+               Foreground="White"
+               FontSize="12"
+               LineHeight="24"
+               TextWrapping="Wrap"
+               TextAlignment="Center"
+               Margin="0,0,0,25"/>
+
+            <TextBlock Text="BESTURING"
+               Foreground="#FFCC00"
+               FontSize="16"
+               HorizontalAlignment="Center"
+               Margin="0,0,0,10"/>
+
+            <TextBlock Text="W A S D of de ↑ ← ↓ →"
+               Foreground="White"
+               FontSize="12"
+               TextAlignment="Center"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -21,10 +21,25 @@ namespace ByteRacer.Overlays
         public SettingsOverlay()
         {
             InitializeComponent();
+            UpdateVolumeIcon(VolumeSlider.Value);
         }
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Visibility = Visibility.Collapsed;
+        }
+
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            UpdateVolumeIcon(e.NewValue);
+        }
+
+        private void UpdateVolumeIcon(double volume)
+        {
+            if (Wave1 == null || Wave2 == null || Wave3 == null) return;
+
+            Wave1.Visibility = volume > 0 ? Visibility.Visible : Visibility.Collapsed;
+            Wave2.Visibility = volume > 33 ? Visibility.Visible : Visibility.Collapsed;
+            Wave3.Visibility = volume > 66 ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }
