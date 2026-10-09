@@ -61,7 +61,7 @@
 
         private void UpdateEffect(double dt)
         {
-            if (HasEffect) return;
+            if (!HasEffect) return;
 
             EffectTimeLeft -= dt;
             if (EffectTimeLeft <= 0)
