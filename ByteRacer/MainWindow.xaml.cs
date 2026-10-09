@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using ByteRacer.Overlays;
 using ByteRacer.Views;
 
 namespace ByteRacer
@@ -18,5 +20,6 @@ namespace ByteRacer
         public void ShowGame() => PageHost.Content = new GamePage(this);
         public void ShowLeaderboard() => PageHost.Content = new LeaderboardPage(this);
         public void ShowNameEntry() => PageHost.Content = new NameEntryPage(this);
+        public void ShowQuizOverlay() => PageHost.Content = new QuizOverlay();
     }
 }
