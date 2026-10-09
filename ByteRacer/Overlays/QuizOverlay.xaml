@@ -108,7 +108,7 @@
                        RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </Border>
 
-            <Grid Grid.Row="1" Grid.Column="1" Margin="0,4,0,4">
+            <Grid Grid.Row="1" Grid.Column="1" Margin="0,4,0,4" Background="#38000000">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -116,11 +116,11 @@
                 </Grid.RowDefinitions>
 
                 <Button x:Name="Answer1" Grid.Row="0" Content="ANSWER1"
-                        Style="{StaticResource AnswerButton}" Margin="0,7,0,7" Click="Click_Ans1"/>
+                        Style="{StaticResource AnswerButton}" Margin="7,7,7,7" Click="Click_Ans1"/>
                 <Button x:Name="Answer2" Grid.Row="1" Content="ANSWER2"
-                        Style="{StaticResource AnswerButton}" Margin="0,7" Click="Click_Ans2"/>
+                        Style="{StaticResource AnswerButton}" Margin="7,7" Click="Click_Ans2"/>
                 <Button x:Name="Answer3" Grid.Row="2" Content="ANSWER3"
-                        Style="{StaticResource AnswerButton}" Margin="0,7,0,7" Click="Click_Ans3"/>
+                        Style="{StaticResource AnswerButton}" Margin="7,7,7,7" Click="Click_Ans3"/>
             </Grid>
         </Grid>
     </Border>
