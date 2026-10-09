@@ -11,8 +11,7 @@ namespace ByteRacer
         public MainWindow()
         {
             InitializeComponent();
-            //ShowStart();
-            ShowGame();
+            ShowStart();
         }
 
         public void ShowStart() => PageHost.Content = new StartPage(this);

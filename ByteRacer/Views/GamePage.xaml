@@ -8,10 +8,11 @@
              Loaded="OnLoaded"
              Unloaded="OnUnloaded">
     <Grid>
+        <!-- Viewport: wat op scherm ziet -->
         <Canvas x:Name="Viewport" Background="Aqua" ClipToBounds="True">
 
+            <!-- World: Hele wereld -->
             <Canvas x:Name="World">
-
                 <Canvas.Background>
                     <DrawingBrush TileMode="Tile" Viewport="0,0,100,100" ViewportUnits="Absolute">
                         <DrawingBrush.Drawing>
@@ -27,10 +28,12 @@
                     </DrawingBrush>
                 </Canvas.Background>
 
+                <!-- Camera -->
                 <Canvas.RenderTransform>
                     <TranslateTransform x:Name="Camera"/>
                 </Canvas.RenderTransform>
 
+                 <!-- Auto: in World Canvas, met World bewegen -->
                 <Grid x:Name="CarVisual" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <RotateTransform x:Name="CarRotation"></RotateTransform>
@@ -41,7 +44,8 @@
             </Canvas>
         </Canvas>
 
-                <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <!-- DebugText: buiten World, fixed Top, Left op scherm -->
+        <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
     
 </UserControl>
