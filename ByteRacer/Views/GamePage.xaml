@@ -33,7 +33,7 @@
                     <TranslateTransform x:Name="Camera"/>
                 </Canvas.RenderTransform>
 
-                 <!-- Auto: in World Canvas, met World bewegen -->
+                <!-- Auto: in World Canvas, met World bewegen -->
                 <Grid x:Name="CarVisual" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <RotateTransform x:Name="CarRotation"></RotateTransform>
@@ -43,6 +43,18 @@
                 </Grid>
             </Canvas>
         </Canvas>
+
+        <Border x:Name="StartLights" Visibility="Collapsed" IsHitTestVisible="False"
+                HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"
+                Background="#E6111111" CornerRadius="12" Padding="14,10">
+            <StackPanel x:Name="StartLightsPanel" Orientation="Horizontal">
+                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="44" Height="44" Margin="6"/>
+            </StackPanel>
+        </Border>
 
         <!-- DebugText: buiten World, fixed Top, Left op scherm -->
         <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>

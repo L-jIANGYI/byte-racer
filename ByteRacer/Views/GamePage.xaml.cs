@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using ByteRacer.Game;
 
 namespace ByteRacer.Views
@@ -19,6 +20,9 @@ namespace ByteRacer.Views
         private const double WorldHeight = 2000;
         private const double MetersPerPixel = 0.1;
         private const double CameraFollowSpeed = 8;
+        private const double LightsOutShowSeconds = 0.8;
+        private static readonly Brush LightOnColor = new SolidColorBrush(Color.FromRgb(235, 25, 25));
+        private static readonly Brush LightOffColor = new SolidColorBrush(Color.FromRgb(45, 12, 12));
 
         // ---------- Game loop ----------
         private readonly Stopwatch _clock = new Stopwatch();
@@ -30,6 +34,7 @@ namespace ByteRacer.Views
 
         // ---------- Car ----------
         private readonly Car _car = new Car();
+        private readonly GameState _gameState = new GameState();
 
         public GamePage(MainWindow main)
         {
@@ -67,11 +72,18 @@ namespace ByteRacer.Views
         }
 
         /// <summary>
-        /// Alles clean up wanneer ontladen.
+        /// Clean up bij ontladen
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnUnloaded(object sender, RoutedEventArgs e)
+        private void OnUnloaded(object sender, RoutedEventArgs e) => StopLoop();
+
+        /// <summary>
+        /// Loop stop zetten en clean up
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StopLoop()
         {
             CompositionTarget.Rendering -= OnFrame;
 
@@ -100,8 +112,12 @@ namespace ByteRacer.Views
             if (e.IsRepeat) return;
             switch (e.Key)
             {
-                case Key.B: _car.ApplyEffect(1.5, 3); break;
-                case Key.N: _car.ApplyEffect(0.5, 3); break;
+                case Key.B:
+                    _car.ApplyEffect(1.5, 3);
+                    break;
+                case Key.N:
+                    _car.ApplyEffect(0.5, 3);
+                    break;
             }
         }
 
@@ -159,11 +175,11 @@ namespace ByteRacer.Views
             _lastFrameTime = now;
             if (dt > 0.05) dt = 0.05; // Niet flash wanneer lang vast zit.
 
-            _car.Update(dt, ReadInput(), true);
-            KeepCarInWorld();
+            _gameState.Update(dt);
 
             DrawCar();
             UpdateCamera(dt);
+            DrawStartLights();
             DrawDebug();
         }
 
@@ -217,12 +233,28 @@ namespace ByteRacer.Views
             Camera.Y += (targetY - Camera.Y) * t;
         }
 
+        private void DrawStartLights()
+        {
+            bool isInLightsOutShow =
+                _gameState.State == RaceState.Racing && _gameState.RaceTime < LightsOutShowSeconds;
+            bool show = _gameState.State == RaceState.Countdown || isInLightsOutShow;
+
+            StartLights.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+            if (!show) return;
+
+            int lightsOn = _gameState.LightsOn;
+            for (int i = 0; i < StartLightsPanel.Children.Count; i++)
+            {
+                var light = (Ellipse)StartLightsPanel.Children[i];
+                light.Fill = i < lightsOn ? LightOnColor : LightOffColor;
+            }
+        }
+
         private void DrawDebug()
         {
             double kmh = Math.Abs(_car.Speed) * MetersPerPixel * 3.6;
-            DebugText.Text = $"speed  {_car.Speed,6:0} px/s   {kmh:0} km/h\n" +
-                             $"SpeelMultiplier {_car.SpeedMultiplier}\n" +
-                             $"EffectTimeLeft {_car.EffectTimeLeft}";
+            DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
+                             $"{kmh:0} km/h\n";
         }
 
         #endregion
