@@ -118,6 +118,9 @@ namespace ByteRacer.Views
                 case Key.N:
                     _car.ApplyEffect(0.5, 3);
                     break;
+                case Key.C:
+                    _gameState.ChangeState(RaceState.Countdown);
+                    break;
             }
         }
 
@@ -177,9 +180,17 @@ namespace ByteRacer.Views
 
             _gameState.Update(dt);
 
+            switch (_gameState.State)
+            {
+                case RaceState.Racing:
+                    _car.Update(dt, ReadInput(), onTrack: true);
+                    KeepCarInWorld();
+                    break;
+            }
+
             DrawCar();
             UpdateCamera(dt);
-            DrawStartLights();
+            DrawHud();
             DrawDebug();
         }
 
@@ -233,6 +244,12 @@ namespace ByteRacer.Views
             Camera.Y += (targetY - Camera.Y) * t;
         }
 
+        private void DrawHud()
+        {
+            RaceTimeText.Text = FormatTime(_gameState.RaceTime);
+            DrawStartLights();
+        }
+
         private void DrawStartLights()
         {
             bool isInLightsOutShow =
@@ -249,6 +266,9 @@ namespace ByteRacer.Views
                 light.Fill = i < lightsOn ? LightOnColor : LightOffColor;
             }
         }
+
+        private static string FormatTime(double seconds)
+            => TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\.ff");
 
         private void DrawDebug()
         {

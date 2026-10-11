@@ -49,7 +49,7 @@
             }
         }
 
-        private void ChangeState(RaceState newState)
+        public void ChangeState(RaceState newState)
         {
             State = newState;
             StateTime = 0;
