@@ -24,6 +24,12 @@ namespace ByteRacer.Views
         {
             InitializeComponent();
             _main = main;
+            GameBtn.Click += BackToGame;
+        }
+
+        private void BackToGame(object? sender, RoutedEventArgs e)
+        {
+            _main.ShowGame();
         }
     }
 }

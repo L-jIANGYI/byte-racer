@@ -60,6 +60,14 @@
         <TextBlock x:Name="RaceTimeText" Text="00:00.00" FontSize="28" Foreground="White"
                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0"/>
 
+        <TextBlock x:Name="CenterText" Visibility="Collapsed" IsHitTestVisible="False"
+                   FontSize="96" Foreground="White" TextAlignment="Center"
+                   HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock.Effect>
+                <DropShadowEffect BlurRadius="16" ShadowDepth="0" Opacity="0.8"/>
+            </TextBlock.Effect>
+        </TextBlock>
+
         <!-- DebugText: buiten World, fixed Top, Left op scherm -->
         <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>

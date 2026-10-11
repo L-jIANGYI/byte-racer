@@ -13,6 +13,8 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class GamePage : UserControl
     {
+        #region ---------------------- Properties -------------------------
+
         private readonly MainWindow _main;
 
         // ---------- Settings ----------
@@ -23,6 +25,7 @@ namespace ByteRacer.Views
         private const double LightsOutShowSeconds = 0.8;
         private static readonly Brush LightOnColor = new SolidColorBrush(Color.FromRgb(235, 25, 25));
         private static readonly Brush LightOffColor = new SolidColorBrush(Color.FromRgb(45, 12, 12));
+        private const double FinishScreenSeconds = 3;
 
         // ---------- Game loop ----------
         private readonly Stopwatch _clock = new Stopwatch();
@@ -36,6 +39,8 @@ namespace ByteRacer.Views
         private readonly Car _car = new Car();
         private readonly GameState _gameState = new GameState();
 
+        #endregion
+
         public GamePage(MainWindow main)
         {
             InitializeComponent();
@@ -46,7 +51,7 @@ namespace ByteRacer.Views
             World.Height = WorldHeight;
         }
 
-        #region Start / Stop
+        #region ------------------------- Start / Stop -------------------------
 
         /// <summary>
         /// Init game bij laden.
@@ -97,7 +102,7 @@ namespace ByteRacer.Views
 
         #endregion
 
-        #region Key Methods
+        #region ------------------------- Key Methods -------------------------
 
         /// <summary>
         /// Key down event, voeg gedrukte key in _pressedKeys.
@@ -120,6 +125,9 @@ namespace ByteRacer.Views
                     break;
                 case Key.C:
                     _gameState.ChangeState(RaceState.Countdown);
+                    break;
+                case Key.F:
+                    _gameState.Finish();
                     break;
             }
         }
@@ -158,7 +166,7 @@ namespace ByteRacer.Views
 
         #endregion
 
-        #region Elke frame gebeurt
+        #region ------------------------- Elke frame gebeurt -------------------------
 
         /// <summary>
         /// Game loop
@@ -185,6 +193,17 @@ namespace ByteRacer.Views
                 case RaceState.Racing:
                     _car.Update(dt, ReadInput(), onTrack: true);
                     KeepCarInWorld();
+                    break;
+                case RaceState.Finished:
+                    _car.Update(dt, CarInput.None, onTrack: true);
+                    KeepCarInWorld();
+                    if (_gameState.StateTime >= FinishScreenSeconds)
+                    {
+                        StopLoop();
+                        _main.ShowLeaderboard();
+                        return;
+                    }
+
                     break;
             }
 
@@ -248,6 +267,12 @@ namespace ByteRacer.Views
         {
             RaceTimeText.Text = FormatTime(_gameState.RaceTime);
             DrawStartLights();
+
+            if (_gameState.State == RaceState.Finished)
+            {
+                CenterText.Text = $"FINISH\n{FormatTime(_gameState.RaceTime)}";
+                CenterText.Visibility = Visibility.Visible;
+            }
         }
 
         private void DrawStartLights()

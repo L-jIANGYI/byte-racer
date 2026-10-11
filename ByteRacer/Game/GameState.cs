@@ -49,6 +49,12 @@
             }
         }
 
+        public void Finish()
+        {
+            if (State != RaceState.Racing) return;
+            ChangeState(RaceState.Finished);
+        }
+
         public void ChangeState(RaceState newState)
         {
             State = newState;
