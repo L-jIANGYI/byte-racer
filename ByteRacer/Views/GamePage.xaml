@@ -68,6 +68,28 @@
             </TextBlock.Effect>
         </TextBlock>
 
+        <Button x:Name="PauseButton"
+                Width="56" Height="56"
+                Margin="16"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Focusable="False"
+                Cursor="Hand"
+                Click="PauseButton_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="10" Background="#80000000">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Width="7" Height="22" RadiusX="2" RadiusY="2" Fill="White"/>
+                <Rectangle Width="7" Height="22" RadiusX="2" RadiusY="2" Fill="White" Margin="7,0,0,0"/>
+            </StackPanel>
+        </Button>
+
         <!-- DebugText: buiten World, fixed Top, Left op scherm -->
         <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>

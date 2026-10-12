@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 using ByteRacer.Game;
 
 namespace ByteRacer.Views
@@ -117,17 +118,23 @@ namespace ByteRacer.Views
             if (e.IsRepeat) return;
             switch (e.Key)
             {
+                case Key.Escape:
+                    TogglePause();
+                    break;
                 case Key.B:
                     _car.ApplyEffect(1.5, 3);
                     break;
                 case Key.N:
                     _car.ApplyEffect(0.5, 3);
                     break;
-                case Key.C:
-                    _gameState.ChangeState(RaceState.Countdown);
-                    break;
                 case Key.F:
                     _gameState.Finish();
+                    break;
+                case Key.R:
+                    RestartGame();
+                    break;
+                case Key.X:
+                    ExitToStart();
                     break;
             }
         }
@@ -144,7 +151,11 @@ namespace ByteRacer.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnWindowDeactivated(object? sender, EventArgs e) => _pressedKeys.Clear();
+        private void OnWindowDeactivated(object? sender, EventArgs e)
+        {
+            _pressedKeys.Clear();
+            PauseGame();
+        }
 
         /// <summary>
         /// Helper function, zorg input voor WASD en pijlen beide werkt.
@@ -268,10 +279,19 @@ namespace ByteRacer.Views
             RaceTimeText.Text = FormatTime(_gameState.RaceTime);
             DrawStartLights();
 
-            if (_gameState.State == RaceState.Finished)
+            switch (_gameState.State)
             {
-                CenterText.Text = $"FINISH\n{FormatTime(_gameState.RaceTime)}";
-                CenterText.Visibility = Visibility.Visible;
+                case RaceState.Paused:
+                    CenterText.Text = "PAUZE";
+                    CenterText.Visibility = Visibility.Visible;
+                    break;
+                case RaceState.Finished:
+                    CenterText.Text = $"FINISH\n{FormatTime(_gameState.RaceTime)}";
+                    CenterText.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    CenterText.Visibility = Visibility.Collapsed;
+                    break;
             }
         }
 
@@ -301,6 +321,38 @@ namespace ByteRacer.Views
             DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
                              $"{kmh:0} km/h\n";
         }
+
+        #endregion
+
+        #region Pauze
+
+        private void PauseGame()
+        {
+            if (!_gameState.canPause) return;
+
+            _gameState.Pause();
+            _pressedKeys.Clear();
+        }
+
+        private void ResumeGame()
+        {
+            if (!_gameState.isPaused) return;
+
+            _pressedKeys.Clear();
+            _gameState.Resume();
+        }
+
+        private void TogglePause()
+        {
+            if (_gameState.isPaused) ResumeGame();
+            else PauseGame();
+        }
+
+        private void RestartGame() => _main.ShowGame();
+
+        private void ExitToStart() => _main.ShowStart();
+
+        private void PauseButton_Click(object sender, RoutedEventArgs e) => TogglePause();
 
         #endregion
     }
