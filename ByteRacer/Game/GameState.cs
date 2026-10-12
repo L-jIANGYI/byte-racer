@@ -26,11 +26,16 @@
         public RaceState State { get; private set; } = RaceState.Countdown;
         public double StateTime { get; private set; }
         public double RaceTime { get; private set; }
+
+        // Pause
         private RaceState _stateBeforePause;
         private double _stateTimeBeforePause;
-
         public bool CanPause => State == RaceState.Countdown || State == RaceState.Racing;
         public bool IsPaused => State == RaceState.Paused;
+
+        // Quiz
+        public bool CanStartQuiz => State == RaceState.Racing;
+        public bool IsInQuiz => State == RaceState.Quiz;
 
         public GameState()
         {
@@ -69,6 +74,18 @@
 
             State = _stateBeforePause;
             StateTime = _stateTimeBeforePause;
+        }
+
+        public void StartQuiz()
+        {
+            if (!CanStartQuiz) return;
+            ChangeState(RaceState.Quiz);
+        }
+
+        public void EndQuiz()
+        {
+            if (!IsInQuiz) return;
+            ChangeState(RaceState.Racing);
         }
 
         public void Finish()

@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using ByteRacer.Game;
+using ByteRacer.Models;
 
 namespace ByteRacer.Views
 {
@@ -134,6 +135,15 @@ namespace ByteRacer.Views
                     break;
                 case Key.X:
                     ExitToStart();
+                    break;
+                case Key.Q when _gameState.CanStartQuiz:
+                    OpenQuiz();
+                    break;
+                case Key.J:
+                    OnQuizAnswered(true);
+                    break;
+                case Key.K:
+                    OnQuizAnswered(false);
                     break;
             }
         }
@@ -284,6 +294,10 @@ namespace ByteRacer.Views
                     CenterText.Text = "PAUZE";
                     CenterText.Visibility = Visibility.Visible;
                     break;
+                case RaceState.Quiz:
+                    CenterText.Text = "Quiz\n J = ✔ K = ❌";
+                    CenterText.Visibility = Visibility.Visible;
+                    break;
                 case RaceState.Finished:
                     CenterText.Text = $"FINISH\n{FormatTime(_gameState.RaceTime)}";
                     CenterText.Visibility = Visibility.Visible;
@@ -318,7 +332,8 @@ namespace ByteRacer.Views
         {
             double kmh = Math.Abs(_car.Speed) * MetersPerPixel * 3.6;
             DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
-                             $"{kmh:0} km/h\n";
+                             $"{kmh:0} km/h\n" +
+                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s";
         }
 
         #endregion
@@ -352,6 +367,28 @@ namespace ByteRacer.Views
         private void ExitToStart() => _main.ShowStart();
 
         private void PauseButton_Click(object sender, RoutedEventArgs e) => TogglePause();
+
+        #endregion
+
+        #region ------------------------- Quiz -------------------------
+
+        private void OpenQuiz()
+        {
+            if (!_gameState.CanStartQuiz) return;
+            _gameState.StartQuiz();
+            _pressedKeys.Clear();
+        }
+
+        private void OnQuizAnswered(bool correct)
+        {
+            if (!_gameState.IsInQuiz) return;
+
+            double multiplier = correct ? GameSettings.QuizBoost : GameSettings.QuizPenalty;
+            _car.ApplyEffect(multiplier, GameSettings.QuizEffectSeconds);
+
+            _pressedKeys.Clear();
+            _gameState.EndQuiz();
+        }
 
         #endregion
     }
