@@ -43,7 +43,6 @@ namespace ByteRacer.Views
             InitializeComponent();
             _main = main;
 
-            // Hier wordt de grootte van "World" gedefinieerd
             World.Width = WorldWidth;
             World.Height = WorldHeight;
         }
@@ -270,6 +269,9 @@ namespace ByteRacer.Views
             Camera.Y += (targetY - Camera.Y) * t;
         }
 
+        /// <summary>
+        /// Verwerk de racetijd en CenterText o.b.v. status aanpassen 
+        /// </summary>
         private void DrawHud()
         {
             RaceTimeText.Text = FormatTime(_gameState.RaceTime);
@@ -295,6 +297,9 @@ namespace ByteRacer.Views
             }
         }
 
+        /// <summary>
+        /// startlichten tekenen, dat 1 op 1 rood wordt en tegelijk uit als 5 aan zijn
+        /// </summary>
         private void DrawStartLights()
         {
             bool isInLightsOutShow =
@@ -312,6 +317,11 @@ namespace ByteRacer.Views
             }
         }
 
+        /// <summary>
+        /// Helper function, racetijd formaten
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
         private static string FormatTime(double seconds)
             => TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\.ff");
 
@@ -327,6 +337,9 @@ namespace ByteRacer.Views
 
         #region ------------------------- Pauze -------------------------
 
+        /// <summary>
+        /// Pauzeert het spel
+        /// </summary>
         private void PauseGame()
         {
             if (!_gameState.CanPause) return;
@@ -335,6 +348,9 @@ namespace ByteRacer.Views
             _input.Clear();
         }
 
+        /// <summary>
+        /// Doorgaan
+        /// </summary>
         private void ResumeGame()
         {
             if (!_gameState.IsPaused) return;
@@ -343,14 +359,23 @@ namespace ByteRacer.Views
             _gameState.Resume();
         }
 
+        /// <summary>
+        /// Pauzeren of verder gaan.
+        /// </summary>
         private void TogglePause()
         {
             if (_gameState.IsPaused) ResumeGame();
             else PauseGame();
         }
 
+        /// <summary>
+        /// Opnieuw
+        /// </summary>
         private void RestartGame() => _main.ShowGame();
 
+        /// <summary>
+        /// Terug naar start
+        /// </summary>
         private void ExitToStart() => _main.ShowStart();
 
         private void PauseButton_Click(object sender, RoutedEventArgs e) => TogglePause();
@@ -359,6 +384,9 @@ namespace ByteRacer.Views
 
         #region ------------------------- Quiz -------------------------
 
+        /// <summary>
+        /// Stop de game en open de vraag scherm
+        /// </summary>
         private void OpenQuiz()
         {
             if (!_gameState.CanStartQuiz) return;
@@ -366,6 +394,10 @@ namespace ByteRacer.Views
             _input.Clear();
         }
 
+        /// <summary>
+        /// Na het antwoord: boost/slowdown en verder racen.
+        /// </summary>
+        /// <param name="correct"></param>
         private void OnQuizAnswered(bool correct)
         {
             if (!_gameState.IsInQuiz) return;

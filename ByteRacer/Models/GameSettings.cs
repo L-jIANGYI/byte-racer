@@ -1,5 +1,8 @@
 ﻿namespace ByteRacer.Models
 {
+    /// <summary>
+    /// Vaste spelregels
+    /// </summary>
     public static class GameSettings
     {
         // ---------- Race ----------

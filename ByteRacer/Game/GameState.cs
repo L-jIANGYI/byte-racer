@@ -43,6 +43,10 @@ namespace ByteRacer.Game
             _lightsOutTime = GameSettings.StartLightCount * GameSettings.StartLightInterval + holdTime;
         }
 
+        /// <summary>
+        /// Werkt de tijd bij racing state en verwerkt de huidige racestatus.
+        /// </summary>
+        /// <param name="dt"></param>
         public void Update(double dt)
         {
             StateTime += dt;
@@ -59,6 +63,9 @@ namespace ByteRacer.Game
             }
         }
 
+        /// <summary>
+        /// Pauze het spel en onthoudt status en StateTime
+        /// </summary>
         public void Pause()
         {
             if (!CanPause) return;
@@ -68,6 +75,9 @@ namespace ByteRacer.Game
             ChangeState(RaceState.Paused);
         }
 
+        /// <summary>
+        /// Verder waar het spel gepauzeerd was
+        /// </summary>
         public void Resume()
         {
             if (!IsPaused) return;
@@ -76,24 +86,37 @@ namespace ByteRacer.Game
             StateTime = _stateTimeBeforePause;
         }
 
+        /// <summary>
+        /// state: Racen → vraag
+        /// </summary>
         public void StartQuiz()
         {
             if (!CanStartQuiz) return;
             ChangeState(RaceState.Quiz);
         }
 
+        /// <summary>
+        /// state: Vraag → racen
+        /// </summary>
         public void EndQuiz()
         {
             if (!IsInQuiz) return;
             ChangeState(RaceState.Racing);
         }
 
+        /// <summary>
+        /// Racen -> finish
+        /// </summary>
         public void Finish()
         {
             if (State != RaceState.Racing) return;
             ChangeState(RaceState.Finished);
         }
 
+        /// <summary>
+        /// game status veranderen
+        /// </summary>
+        /// <param name="newState"></param>
         public void ChangeState(RaceState newState)
         {
             State = newState;
