@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Xml.Serialization;
 using ByteRacer.Game;
 
 namespace ByteRacer.Views
@@ -324,11 +323,11 @@ namespace ByteRacer.Views
 
         #endregion
 
-        #region Pauze
+        #region ------------------------- Pauze -------------------------
 
         private void PauseGame()
         {
-            if (!_gameState.canPause) return;
+            if (!_gameState.CanPause) return;
 
             _gameState.Pause();
             _pressedKeys.Clear();
@@ -336,7 +335,7 @@ namespace ByteRacer.Views
 
         private void ResumeGame()
         {
-            if (!_gameState.isPaused) return;
+            if (!_gameState.IsPaused) return;
 
             _pressedKeys.Clear();
             _gameState.Resume();
@@ -344,7 +343,7 @@ namespace ByteRacer.Views
 
         private void TogglePause()
         {
-            if (_gameState.isPaused) ResumeGame();
+            if (_gameState.IsPaused) ResumeGame();
             else PauseGame();
         }
 

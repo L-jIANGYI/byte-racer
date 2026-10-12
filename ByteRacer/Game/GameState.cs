@@ -29,8 +29,8 @@
         private RaceState _stateBeforePause;
         private double _stateTimeBeforePause;
 
-        public bool canPause => State == RaceState.Countdown || State == RaceState.Racing;
-        public bool isPaused => State == RaceState.Paused;
+        public bool CanPause => State == RaceState.Countdown || State == RaceState.Racing;
+        public bool IsPaused => State == RaceState.Paused;
 
         public GameState()
         {
@@ -56,7 +56,7 @@
 
         public void Pause()
         {
-            if (!canPause) return;
+            if (!CanPause) return;
 
             _stateBeforePause = State;
             _stateTimeBeforePause = StateTime;
@@ -65,7 +65,7 @@
 
         public void Resume()
         {
-            if (!isPaused) return;
+            if (!IsPaused) return;
 
             State = _stateBeforePause;
             StateTime = _stateTimeBeforePause;
