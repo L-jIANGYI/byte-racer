@@ -392,6 +392,7 @@ namespace ByteRacer.Views
             if (!_gameState.CanStartQuiz) return;
             _gameState.StartQuiz();
             _input.Clear();
+            Quiz.Show();
         }
 
         /// <summary>
