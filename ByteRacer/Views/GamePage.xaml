@@ -33,7 +33,7 @@
                     <TranslateTransform x:Name="Camera"/>
                 </Canvas.RenderTransform>
 
-                 <!-- Auto: in World Canvas, met World bewegen -->
+                <!-- Auto: in World Canvas, met World bewegen -->
                 <Grid x:Name="CarVisual" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <RotateTransform x:Name="CarRotation"></RotateTransform>
@@ -43,6 +43,52 @@
                 </Grid>
             </Canvas>
         </Canvas>
+
+        <!-- Startlights on countdown -->
+        <Border x:Name="StartLights" Visibility="Collapsed" IsHitTestVisible="False"
+                HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"
+                Background="#E6111111" CornerRadius="12" Padding="14,10">
+            <StackPanel x:Name="StartLightsPanel" Orientation="Horizontal">
+                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="44" Height="44" Margin="6"/>
+            </StackPanel>
+        </Border>
+
+        <TextBlock x:Name="RaceTimeText" Text="00:00.00" FontSize="28" Foreground="White"
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0"/>
+
+        <TextBlock x:Name="CenterText" Visibility="Collapsed" IsHitTestVisible="False"
+                   FontSize="96" Foreground="White" TextAlignment="Center"
+                   HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock.Effect>
+                <DropShadowEffect BlurRadius="16" ShadowDepth="0" Opacity="0.8"/>
+            </TextBlock.Effect>
+        </TextBlock>
+
+        <Button x:Name="PauseButton"
+                Width="56" Height="56"
+                Margin="16"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Focusable="False"
+                Cursor="Hand"
+                Click="PauseButton_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="10" Background="#80000000">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Width="7" Height="22" RadiusX="2" RadiusY="2" Fill="White"/>
+                <Rectangle Width="7" Height="22" RadiusX="2" RadiusY="2" Fill="White" Margin="7,0,0,0"/>
+            </StackPanel>
+        </Button>
 
         <!-- DebugText: buiten World, fixed Top, Left op scherm -->
         <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>

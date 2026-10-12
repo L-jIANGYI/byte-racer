@@ -3,7 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using ByteRacer.Game;
+using ByteRacer.Models;
 
 namespace ByteRacer.Views
 {
@@ -12,36 +14,40 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class GamePage : UserControl
     {
+        #region ---------------------- Properties -------------------------
+
         private readonly MainWindow _main;
 
-        // ---------- Settings ----------
+        // ---------- Display ----------
         private const double WorldWidth = 3000;
         private const double WorldHeight = 2000;
-        private const double MetersPerPixel = 0.1;
         private const double CameraFollowSpeed = 8;
+        private const double LightsOutShowSeconds = 0.8;
+        private static readonly Brush LightOnColor = new SolidColorBrush(Color.FromRgb(235, 25, 25));
+        private static readonly Brush LightOffColor = new SolidColorBrush(Color.FromRgb(45, 12, 12));
 
         // ---------- Game loop ----------
         private readonly Stopwatch _clock = new Stopwatch();
         private TimeSpan _lastFrameTime;
         private TimeSpan _lastRenderingTime;
 
-        // ---------- Key ----------
-        private readonly HashSet<Key> _pressedKeys = new HashSet<Key>();
-
-        // ---------- Car ----------
+        // ---------- Game ----------
+        private readonly PlayerInput _input = new PlayerInput();
         private readonly Car _car = new Car();
+        private readonly GameState _gameState = new GameState();
+
+        #endregion
 
         public GamePage(MainWindow main)
         {
             InitializeComponent();
             _main = main;
 
-            // Hier wordt de grootte van "World" gedefinieerd
             World.Width = WorldWidth;
             World.Height = WorldHeight;
         }
 
-        #region Start / Stop
+        #region ------------------------- Start / Stop -------------------------
 
         /// <summary>
         /// Init game bij laden.
@@ -67,11 +73,18 @@ namespace ByteRacer.Views
         }
 
         /// <summary>
-        /// Alles clean up wanneer ontladen.
+        /// Clean up bij ontladen
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnUnloaded(object sender, RoutedEventArgs e)
+        private void OnUnloaded(object sender, RoutedEventArgs e) => StopLoop();
+
+        /// <summary>
+        /// Loop stop zetten en clean up
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StopLoop()
         {
             CompositionTarget.Rendering -= OnFrame;
 
@@ -80,12 +93,12 @@ namespace ByteRacer.Views
             _main.Deactivated -= OnWindowDeactivated;
 
             _clock.Stop();
-            _pressedKeys.Clear();
+            _input.Clear();
         }
 
         #endregion
 
-        #region Key Methods
+        #region ------------------------- Key Methods -------------------------
 
         /// <summary>
         /// Key down event, voeg gedrukte key in _pressedKeys.
@@ -94,15 +107,15 @@ namespace ByteRacer.Views
         /// <param name="e"></param>
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
-            _pressedKeys.Add(e.Key);
+            _input.Press(e.Key);
 
-            // voor vragen beloning later: test speelboost en afremmen 
             if (e.IsRepeat) return;
-            switch (e.Key)
-            {
-                case Key.B: _car.ApplyEffect(1.5, 3); break;
-                case Key.N: _car.ApplyEffect(0.5, 3); break;
-            }
+
+            if (e.Key == Key.Escape) TogglePause();
+
+#if DEBUG
+            HandleDebugKeys(e.Key);
+#endif
         }
 
         /// <summary>
@@ -110,36 +123,55 @@ namespace ByteRacer.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnKeyUp(object? sender, KeyEventArgs e) => _pressedKeys.Remove(e.Key);
+        private void OnKeyUp(object? sender, KeyEventArgs e) => _input.Release(e.Key);
 
         /// <summary>
         /// Zorg voor dat van pagina verandert, auto niet door rijden.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnWindowDeactivated(object? sender, EventArgs e) => _pressedKeys.Clear();
+        private void OnWindowDeactivated(object? sender, EventArgs e)
+        {
+            _input.Clear();
+            PauseGame();
+        }
 
-        /// <summary>
-        /// Helper function, zorg input voor WASD en pijlen beide werkt.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        private bool IsDown(Key a, Key b) => _pressedKeys.Contains(a) || _pressedKeys.Contains(b);
-
-        /// <summary>
-        /// Leest de huidige input van de speler.
-        /// </summary>
-        /// <returns>De rijinvoer op basis van de ingedrukte toetsen.</returns>
-        private CarInput ReadInput() => new CarInput(
-            Gas: IsDown(Key.Up, Key.W),
-            Brake: IsDown(Key.Down, Key.S),
-            Left: IsDown(Key.Left, Key.A),
-            Right: IsDown(Key.Right, Key.D));
+#if DEBUG
+        private void HandleDebugKeys(Key key)
+        {
+            switch (key)
+            {
+                case Key.B:
+                    _car.ApplyEffect(1.5, 3);
+                    break;
+                case Key.N:
+                    _car.ApplyEffect(0.5, 3);
+                    break;
+                case Key.F:
+                    _gameState.Finish();
+                    break;
+                case Key.R:
+                    RestartGame();
+                    break;
+                case Key.X:
+                    ExitToStart();
+                    break;
+                case Key.Q:
+                    OpenQuiz();
+                    break;
+                case Key.J:
+                    OnQuizAnswered(true);
+                    break;
+                case Key.K:
+                    OnQuizAnswered(false);
+                    break;
+            }
+        }
+#endif
 
         #endregion
 
-        #region Elke frame gebeurt
+        #region ------------------------- Elke frame gebeurt -------------------------
 
         /// <summary>
         /// Game loop
@@ -148,22 +180,42 @@ namespace ByteRacer.Views
         /// <param name="e"></param>
         private void OnFrame(object? sender, EventArgs e)
         {
-            // Zorg dat niet 2x aangeroepen in een frame. Kleine bug van CompositionTarget.Rendering
+            // Niet 2x aangeroepen per frame
             TimeSpan renderingTime = ((RenderingEventArgs)e).RenderingTime;
             if (renderingTime == _lastRenderingTime) return;
             _lastRenderingTime = renderingTime;
 
-            // Bereken delta time
+            // Delta time
             TimeSpan now = _clock.Elapsed;
             double dt = (now - _lastFrameTime).TotalSeconds;
             _lastFrameTime = now;
             if (dt > 0.05) dt = 0.05; // Niet flash wanneer lang vast zit.
 
-            _car.Update(dt, ReadInput(), true);
-            KeepCarInWorld();
+            _gameState.Update(dt);
+
+            switch (_gameState.State)
+            {
+                case RaceState.Racing:
+                    _car.Update(dt, _input.Read(), onTrack: true);
+                    KeepCarInWorld();
+                    break;
+
+                case RaceState.Finished:
+                    _car.Update(dt, CarInput.None, onTrack: true);
+                    KeepCarInWorld();
+                    if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
+                    {
+                        StopLoop();
+                        _main.ShowLeaderboard();
+                        return;
+                    }
+
+                    break;
+            }
 
             DrawCar();
             UpdateCamera(dt);
+            DrawHud();
             DrawDebug();
         }
 
@@ -217,12 +269,144 @@ namespace ByteRacer.Views
             Camera.Y += (targetY - Camera.Y) * t;
         }
 
+        /// <summary>
+        /// Verwerk de racetijd en CenterText o.b.v. status aanpassen 
+        /// </summary>
+        private void DrawHud()
+        {
+            RaceTimeText.Text = FormatTime(_gameState.RaceTime);
+            DrawStartLights();
+
+            switch (_gameState.State)
+            {
+                case RaceState.Paused:
+                    CenterText.Text = "PAUZE";
+                    CenterText.Visibility = Visibility.Visible;
+                    break;
+                case RaceState.Quiz:
+                    CenterText.Text = "Quiz\n J = ✔ K = ❌";
+                    CenterText.Visibility = Visibility.Visible;
+                    break;
+                case RaceState.Finished:
+                    CenterText.Text = $"FINISH\n{FormatTime(_gameState.RaceTime)}";
+                    CenterText.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    CenterText.Visibility = Visibility.Collapsed;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// startlichten tekenen, dat 1 op 1 rood wordt en tegelijk uit als 5 aan zijn
+        /// </summary>
+        private void DrawStartLights()
+        {
+            bool isInLightsOutShow =
+                _gameState.State == RaceState.Racing && _gameState.RaceTime < LightsOutShowSeconds;
+            bool show = _gameState.State == RaceState.Countdown || isInLightsOutShow;
+
+            StartLights.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+            if (!show) return;
+
+            int lightsOn = _gameState.LightsOn;
+            for (int i = 0; i < StartLightsPanel.Children.Count; i++)
+            {
+                var light = (Ellipse)StartLightsPanel.Children[i];
+                light.Fill = i < lightsOn ? LightOnColor : LightOffColor;
+            }
+        }
+
+        /// <summary>
+        /// Helper function, racetijd formaten
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        private static string FormatTime(double seconds)
+            => TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\.ff");
+
         private void DrawDebug()
         {
-            double kmh = Math.Abs(_car.Speed) * MetersPerPixel * 3.6;
-            DebugText.Text = $"speed  {_car.Speed,6:0} px/s   {kmh:0} km/h\n" +
-                             $"SpeelMultiplier {_car.SpeedMultiplier}\n" +
-                             $"EffectTimeLeft {_car.EffectTimeLeft}";
+            double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
+            DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
+                             $"{kmh:0} km/h\n" +
+                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s";
+        }
+
+        #endregion
+
+        #region ------------------------- Pauze -------------------------
+
+        /// <summary>
+        /// Pauzeert het spel
+        /// </summary>
+        private void PauseGame()
+        {
+            if (!_gameState.CanPause) return;
+
+            _gameState.Pause();
+            _input.Clear();
+        }
+
+        /// <summary>
+        /// Doorgaan
+        /// </summary>
+        private void ResumeGame()
+        {
+            if (!_gameState.IsPaused) return;
+
+            _input.Clear();
+            _gameState.Resume();
+        }
+
+        /// <summary>
+        /// Pauzeren of verder gaan.
+        /// </summary>
+        private void TogglePause()
+        {
+            if (_gameState.IsPaused) ResumeGame();
+            else PauseGame();
+        }
+
+        /// <summary>
+        /// Opnieuw
+        /// </summary>
+        private void RestartGame() => _main.ShowGame();
+
+        /// <summary>
+        /// Terug naar start
+        /// </summary>
+        private void ExitToStart() => _main.ShowStart();
+
+        private void PauseButton_Click(object sender, RoutedEventArgs e) => TogglePause();
+
+        #endregion
+
+        #region ------------------------- Quiz -------------------------
+
+        /// <summary>
+        /// Stop de game en open de vraag scherm
+        /// </summary>
+        private void OpenQuiz()
+        {
+            if (!_gameState.CanStartQuiz) return;
+            _gameState.StartQuiz();
+            _input.Clear();
+        }
+
+        /// <summary>
+        /// Na het antwoord: boost/slowdown en verder racen.
+        /// </summary>
+        /// <param name="correct"></param>
+        private void OnQuizAnswered(bool correct)
+        {
+            if (!_gameState.IsInQuiz) return;
+
+            double multiplier = correct ? GameSettings.QuizBoost : GameSettings.QuizPenalty;
+            _car.ApplyEffect(multiplier, GameSettings.QuizEffectSeconds);
+
+            _input.Clear();
+            _gameState.EndQuiz();
         }
 
         #endregion
