@@ -1,4 +1,6 @@
-﻿namespace ByteRacer.Game
+﻿using ByteRacer.Models;
+
+namespace ByteRacer.Game
 {
     public enum RaceState
     {
@@ -12,14 +14,10 @@
     class GameState
     {
         // Startlichten
-        public const int LightCount = 5;
-        public const double LightInterval = 1.0;
-        public const double MinHoldTime = 0.2;
-        public const double MaxHoldTime = 2.0;
         private readonly double _lightsOutTime;
 
         public int LightsOn => State == RaceState.Countdown
-            ? Math.Min(LightCount, (int)(StateTime / LightInterval))
+            ? Math.Min(GameSettings.StartLightCount, (int)(StateTime / GameSettings.StartLightInterval))
             : 0;
 
         // GameState
@@ -39,8 +37,10 @@
 
         public GameState()
         {
-            double holdTime = MinHoldTime + Random.Shared.NextDouble() * (MaxHoldTime - MinHoldTime);
-            _lightsOutTime = LightCount * LightInterval + holdTime;
+            double holdTime = GameSettings.StartMinHoldTime
+                              + Random.Shared.NextDouble() *
+                              (GameSettings.StartMaxHoldTime - GameSettings.StartMinHoldTime);
+            _lightsOutTime = GameSettings.StartLightCount * GameSettings.StartLightInterval + holdTime;
         }
 
         public void Update(double dt)

@@ -18,25 +18,21 @@ namespace ByteRacer.Views
 
         private readonly MainWindow _main;
 
-        // ---------- Settings ----------
+        // ---------- Display ----------
         private const double WorldWidth = 3000;
         private const double WorldHeight = 2000;
-        private const double MetersPerPixel = 0.1;
         private const double CameraFollowSpeed = 8;
         private const double LightsOutShowSeconds = 0.8;
         private static readonly Brush LightOnColor = new SolidColorBrush(Color.FromRgb(235, 25, 25));
         private static readonly Brush LightOffColor = new SolidColorBrush(Color.FromRgb(45, 12, 12));
-        private const double FinishScreenSeconds = 3;
 
         // ---------- Game loop ----------
         private readonly Stopwatch _clock = new Stopwatch();
         private TimeSpan _lastFrameTime;
         private TimeSpan _lastRenderingTime;
 
-        // ---------- Key ----------
-        private readonly HashSet<Key> _pressedKeys = new HashSet<Key>();
-
-        // ---------- Car ----------
+        // ---------- Game ----------
+        private readonly PlayerInput _input = new PlayerInput();
         private readonly Car _car = new Car();
         private readonly GameState _gameState = new GameState();
 
@@ -98,7 +94,7 @@ namespace ByteRacer.Views
             _main.Deactivated -= OnWindowDeactivated;
 
             _clock.Stop();
-            _pressedKeys.Clear();
+            _input.Clear();
         }
 
         #endregion
@@ -112,15 +108,40 @@ namespace ByteRacer.Views
         /// <param name="e"></param>
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
-            _pressedKeys.Add(e.Key);
+            _input.Press(e.Key);
 
-            // voor vragen beloning later: test speelboost en afremmen 
             if (e.IsRepeat) return;
-            switch (e.Key)
+
+            if (e.Key == Key.Escape) TogglePause();
+
+#if DEBUG
+            HandleDebugKeys(e.Key);
+#endif
+        }
+
+        /// <summary>
+        /// Key up event, verwijder gedrukte key.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnKeyUp(object? sender, KeyEventArgs e) => _input.Release(e.Key);
+
+        /// <summary>
+        /// Zorg voor dat van pagina verandert, auto niet door rijden.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnWindowDeactivated(object? sender, EventArgs e)
+        {
+            _input.Clear();
+            PauseGame();
+        }
+
+#if DEBUG
+        private void HandleDebugKeys(Key key)
+        {
+            switch (key)
             {
-                case Key.Escape:
-                    TogglePause();
-                    break;
                 case Key.B:
                     _car.ApplyEffect(1.5, 3);
                     break;
@@ -136,7 +157,7 @@ namespace ByteRacer.Views
                 case Key.X:
                     ExitToStart();
                     break;
-                case Key.Q when _gameState.CanStartQuiz:
+                case Key.Q:
                     OpenQuiz();
                     break;
                 case Key.J:
@@ -147,42 +168,7 @@ namespace ByteRacer.Views
                     break;
             }
         }
-
-        /// <summary>
-        /// Key up event, verwijder gedrukte key.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnKeyUp(object? sender, KeyEventArgs e) => _pressedKeys.Remove(e.Key);
-
-        /// <summary>
-        /// Zorg voor dat van pagina verandert, auto niet door rijden.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnWindowDeactivated(object? sender, EventArgs e)
-        {
-            _pressedKeys.Clear();
-            PauseGame();
-        }
-
-        /// <summary>
-        /// Helper function, zorg input voor WASD en pijlen beide werkt.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        private bool IsDown(Key a, Key b) => _pressedKeys.Contains(a) || _pressedKeys.Contains(b);
-
-        /// <summary>
-        /// Leest de huidige input van de speler.
-        /// </summary>
-        /// <returns>De rijinvoer op basis van de ingedrukte toetsen.</returns>
-        private CarInput ReadInput() => new CarInput(
-            Gas: IsDown(Key.Up, Key.W),
-            Brake: IsDown(Key.Down, Key.S),
-            Left: IsDown(Key.Left, Key.A),
-            Right: IsDown(Key.Right, Key.D));
+#endif
 
         #endregion
 
@@ -195,12 +181,12 @@ namespace ByteRacer.Views
         /// <param name="e"></param>
         private void OnFrame(object? sender, EventArgs e)
         {
-            // Zorg dat niet 2x aangeroepen in een frame. Kleine bug van CompositionTarget.Rendering
+            // Niet 2x aangeroepen per frame
             TimeSpan renderingTime = ((RenderingEventArgs)e).RenderingTime;
             if (renderingTime == _lastRenderingTime) return;
             _lastRenderingTime = renderingTime;
 
-            // Bereken delta time
+            // Delta time
             TimeSpan now = _clock.Elapsed;
             double dt = (now - _lastFrameTime).TotalSeconds;
             _lastFrameTime = now;
@@ -211,13 +197,14 @@ namespace ByteRacer.Views
             switch (_gameState.State)
             {
                 case RaceState.Racing:
-                    _car.Update(dt, ReadInput(), onTrack: true);
+                    _car.Update(dt, _input.Read(), onTrack: true);
                     KeepCarInWorld();
                     break;
+
                 case RaceState.Finished:
                     _car.Update(dt, CarInput.None, onTrack: true);
                     KeepCarInWorld();
-                    if (_gameState.StateTime >= FinishScreenSeconds)
+                    if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
                     {
                         StopLoop();
                         _main.ShowLeaderboard();
@@ -330,7 +317,7 @@ namespace ByteRacer.Views
 
         private void DrawDebug()
         {
-            double kmh = Math.Abs(_car.Speed) * MetersPerPixel * 3.6;
+            double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
             DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
                              $"{kmh:0} km/h\n" +
                              $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s";
@@ -345,14 +332,14 @@ namespace ByteRacer.Views
             if (!_gameState.CanPause) return;
 
             _gameState.Pause();
-            _pressedKeys.Clear();
+            _input.Clear();
         }
 
         private void ResumeGame()
         {
             if (!_gameState.IsPaused) return;
 
-            _pressedKeys.Clear();
+            _input.Clear();
             _gameState.Resume();
         }
 
@@ -376,7 +363,7 @@ namespace ByteRacer.Views
         {
             if (!_gameState.CanStartQuiz) return;
             _gameState.StartQuiz();
-            _pressedKeys.Clear();
+            _input.Clear();
         }
 
         private void OnQuizAnswered(bool correct)
@@ -386,7 +373,7 @@ namespace ByteRacer.Views
             double multiplier = correct ? GameSettings.QuizBoost : GameSettings.QuizPenalty;
             _car.ApplyEffect(multiplier, GameSettings.QuizEffectSeconds);
 
-            _pressedKeys.Clear();
+            _input.Clear();
             _gameState.EndQuiz();
         }
 
