@@ -46,6 +46,9 @@ namespace ByteRacer.Overlays
             LoadQuestion();
         }
 
+        /// <summary>
+        /// variables uit de json, hebben we ook hier nodig
+        /// </summary>
         public class Question
         {
             public string question {  get; set; }
@@ -53,6 +56,9 @@ namespace ByteRacer.Overlays
             public int correctAnswer { get; set; }
         }
 
+        /// <summary>
+        /// pak een random vraag uit de json, en zet alle labels
+        /// </summary>
         private void LoadQuestion()
         {
             currentQuestion = questions[random.Next(questions.Count)];
@@ -62,6 +68,9 @@ namespace ByteRacer.Overlays
             Answer3.Content = currentQuestion.answers[2];
         }
 
+        /// <summary>
+        /// letterlijk gewoon een if statement, that's it
+        /// </summary>
         private void CheckAnswer(int answer)
         {
             if (answer == currentQuestion.correctAnswer)
@@ -69,9 +78,13 @@ namespace ByteRacer.Overlays
             else
                 MessageBox.Show("antwoord was incorrect");
 
+            Visibility = Visibility.Collapsed;
             LoadQuestion();
         }
 
+        /// <summary>
+        /// roep CheckAnswer op met de bijbehorende answer
+        /// </summary>
         private void Click_Ans1(object sender, RoutedEventArgs e)
         {
             CheckAnswer(0);
