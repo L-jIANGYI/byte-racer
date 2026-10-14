@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using ByteRacer.Game;
 using ByteRacer.Models;
+using ByteRacer.Overlays;
 
 namespace ByteRacer.Views
 {

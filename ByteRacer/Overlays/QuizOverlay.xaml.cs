@@ -16,11 +16,22 @@ namespace ByteRacer.Overlays
     /// <summary>
     /// Interaction logic for QuizOverlay.xaml
     /// </summary>
-    public partial class QuizOverlay : UserControl
-    {
-        public QuizOverlay()
+        public partial class QuizOverlay : UserControl
         {
-            InitializeComponent();
+            public QuizOverlay()
+            {
+                InitializeComponent();
+            }
+
+            public void Show()
+            {
+                Visibility = Visibility.Visible;
+            }
+
+            public void Hide()
+            {
+                Visibility = Visibility.Collapsed;
+            }
         }
     }
-}
+
