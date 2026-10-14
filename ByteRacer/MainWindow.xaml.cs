@@ -13,7 +13,7 @@ namespace ByteRacer
         public MainWindow()
         {
             InitializeComponent();
-            ShowQuizOverlay();
+            ShowStart();
         }
 
         public void ShowStart() => PageHost.Content = new StartPage(this);
