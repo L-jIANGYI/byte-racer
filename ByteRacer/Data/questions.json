@@ -1,9 +1,22 @@
 ﻿/* 
-  Alle quesitons komen binnen []. elke {} is een question
-  */
+  Alle questions komen binnen []. elke {} is een question.
+  Let op: correctAnswer begint bij 0, eerste antwoord is dus 0
+*/
 
 [
   {
-    "question": "Het is een voorbeel",
+    "question": "Uit welk land is de taal 'Python' afkomstig?",
+    "answers": [ "Servië", "Nieuw Zeeland", "Nederland" ],
+    "correctAnswer": 2
   },
+  {
+    "question": "Welke functie schrijft hier '3' in de console?",
+    "answers": [ "Print(3)", "write(3)", "print(3)" ],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Waar wordt Python het meest voor gebruikt?",
+    "answers": [ "AI/Machine Learning", "Games", "Frontend Web Development" ],
+    "correctAnswer": 0
+  }
 ]

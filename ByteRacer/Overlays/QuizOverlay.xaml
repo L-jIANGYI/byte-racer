@@ -81,7 +81,7 @@
             Style="{StaticResource PixelBox}"
             Width="65" Height="65"
             HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Image Source="/Assets/Images/Icons/python.png"
+                <Image Source="pack://application:,,,/Assets/Images/Icons/python.png"
                 Name="LangImage"
                 RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </Border>
@@ -102,7 +102,7 @@
                     Style="{StaticResource PixelBox}"
                     Width="65" Height="65"
                     HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Image Source="/Assets/Images/Icons/spdbst.png"
+                <Image Source="pack://application:,,,/Assets/Images/Icons/spdbst.png"
                        Name="PwrUpImage"
                        Margin="1"
                        RenderOptions.BitmapScalingMode="NearestNeighbor"/>
