@@ -17,10 +17,15 @@ using System.Text.Json;
 namespace ByteRacer.Overlays
 {
     /// <summary>
-    /// Interaction logic for QuizOverlay.xaml
+    /// methode om window te showen, maak wat vars aan en een random voor zo, lees de json, roep loadquestion method op
     /// </summary>
     public partial class QuizOverlay : UserControl
     {
+        public void Show()
+        {
+            Visibility = Visibility.Visible;
+        }
+
         private List<Question> questions;
         private Question currentQuestion;
         private Random random = new Random();
@@ -34,7 +39,7 @@ namespace ByteRacer.Overlays
                 json,
                 new JsonSerializerOptions
                 {
-                    ReadCommentHandling = JsonCommentHandling.Skip
+                    ReadCommentHandling = JsonCommentHandling.Skip // zodat de comments in de json het niet verneuken :-)
                 }
             );
 
