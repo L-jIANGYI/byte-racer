@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using ByteRacer.Overlays;
+using ByteRacer.Services;
 using ByteRacer.Views;
 
 namespace ByteRacer
@@ -15,6 +16,7 @@ namespace ByteRacer
             InitializeComponent();
             ShowStart();
             //ShowGame();
+            SoundService.PlayMusic("menu-music.mp3");
         }
 
         public void ShowStart() => PageHost.Content = new StartPage(this);
@@ -22,5 +24,39 @@ namespace ByteRacer
         public void ShowLeaderboard() => PageHost.Content = new LeaderboardPage(this);
         public void ShowNameEntry() => PageHost.Content = new NameEntryPage(this);
         public void ShowQuizOverlay() => PageHost.Content = new QuizOverlay();
+
+        public void SetFullscreen()
+        {
+            WindowState = WindowState.Normal;  
+            WindowStyle = WindowStyle.None;
+            ResizeMode = ResizeMode.NoResize;
+            WindowState = WindowState.Maximized;
+        }
+
+        public void SetBorderless()
+        {
+            WindowState = WindowState.Normal;
+            WindowStyle = WindowStyle.None;
+            ResizeMode = ResizeMode.NoResize;
+
+            var area = SystemParameters.WorkArea;
+            Left = area.Left;
+            Top = area.Top;
+            Width = area.Width;
+            Height = area.Height;
+        }
+
+        public void SetBordered()
+        {
+            WindowState = WindowState.Normal;
+            WindowStyle = WindowStyle.SingleBorderWindow;
+            ResizeMode = ResizeMode.CanResize;
+
+            Width = 816;
+            Height = 489;
+            var area = SystemParameters.WorkArea;
+            Left = area.Left + (area.Width - Width) / 2;
+            Top = area.Top + (area.Height - Height) / 2;
+        }
     }
 }
