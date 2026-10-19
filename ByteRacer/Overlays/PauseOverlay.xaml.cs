@@ -18,6 +18,10 @@ namespace ByteRacer.Overlays
             UpdateVolumeIcon(VolumeSlider.Value);
         }
 
+        /// <summary>
+        /// Pauzemenu tonen met het huidige volume.
+        /// </summary>
+        /// <param name="volume">0 ~ 100</param>
         public void Show(double volume)
         {
             _isSettingVolume = true;
@@ -26,12 +30,18 @@ namespace ByteRacer.Overlays
             UpdateVolumeIcon(VolumeSlider.Value);
 
             Visibility = Visibility.Visible;
-
-            //Dispatcher.InvokeAsync(() => ResumeButton.Focus(), DispatcherPriority.Input);
         }
 
+        /// <summary>
+        /// Pauzemenu verbergen
+        /// </summary>
         public void Hide() => Visibility = Visibility.Collapsed;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             UpdateVolumeIcon(e.NewValue);
@@ -39,6 +49,10 @@ namespace ByteRacer.Overlays
                 VolumeChanged?.Invoke(e.NewValue);
         }
 
+        /// <summary>
+        /// Golven van volume bepalen.
+        /// </summary>
+        /// <param name="volume"></param>
         private void UpdateVolumeIcon(double volume)
         {
             Wave1.Visibility = volume > 0 ? Visibility.Visible : Visibility.Hidden;

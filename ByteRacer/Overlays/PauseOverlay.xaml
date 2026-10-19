@@ -36,9 +36,6 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Foreground" Value="#F0B429"/>
                 </Trigger>
-                <Trigger Property="IsKeyboardFocused" Value="True">
-                    <Setter Property="Foreground" Value="#F0B429"/>
-                </Trigger>
             </Style.Triggers>
         </Style>
 
