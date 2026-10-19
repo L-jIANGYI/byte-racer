@@ -77,11 +77,11 @@
 
             <!-- Knoppen -->
             <Button x:Name="ResumeButton" Grid.Row="1" Grid.Column="0"
-                    Content="Doorgaan" Style="{StaticResource MenuTextButton}" />
+                    Content="Doorgaan" Style="{StaticResource MenuTextButton}" Click="Resume_Click"/>
             <Button Grid.Row="2" Grid.Column="0"
-                    Content="Opnieuw"  Style="{StaticResource MenuTextButton}" />
+                    Content="Opnieuw"  Style="{StaticResource MenuTextButton}" Click="Restart_Click"/>
             <Button Grid.Row="3" Grid.Column="0"
-                    Content="Exit"     Style="{StaticResource MenuTextButton}" />
+                    Content="Exit"     Style="{StaticResource MenuTextButton}" Click="Exit_Click"/>
 
             <!-- Volume slider: zelfde als in SettingsOverlay -->
             <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="32,0,0,0">

@@ -45,6 +45,10 @@ namespace ByteRacer.Views
 
             World.Width = WorldWidth;
             World.Height = WorldHeight;
+
+            PauseMenu.ResumeClicked += ResumeGame;
+            PauseMenu.RestartClicked += RestartGame;
+            PauseMenu.ExitClicked += ExitToStart;
         }
 
         #region ------------------------- Start / Stop -------------------------
@@ -149,12 +153,6 @@ namespace ByteRacer.Views
                     break;
                 case Key.F:
                     _gameState.Finish();
-                    break;
-                case Key.R:
-                    RestartGame();
-                    break;
-                case Key.X:
-                    ExitToStart();
                     break;
                 case Key.Q:
                     OpenQuiz();
@@ -342,7 +340,7 @@ namespace ByteRacer.Views
 
             _gameState.Pause();
             _input.Clear();
-            PauseOverlay.Show();
+            PauseMenu.Show();
         }
 
         /// <summary>
@@ -354,7 +352,7 @@ namespace ByteRacer.Views
 
             _input.Clear();
             _gameState.Resume();
-            PauseOverlay.Hide();
+            PauseMenu.Hide();
         }
 
         /// <summary>
