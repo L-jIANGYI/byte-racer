@@ -20,11 +20,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <!-- Transparante achtergrond: anders kun je alleen precies op de letters klikken -->
                         <Border Background="Transparent" Padding="8,4">
                             <ContentPresenter HorizontalAlignment="Center">
                                 <ContentPresenter.Effect>
-                                    <!-- Harde zwarte schaduw, past bij de pixelstijl -->
                                     <DropShadowEffect Color="Black" BlurRadius="0" ShadowDepth="3" Direction="-45" Opacity="1"/>
                                 </ContentPresenter.Effect>
                             </ContentPresenter>
@@ -103,7 +101,9 @@
                 <Slider x:Name="VolumeSlider"
                         Grid.Column="1"
                         Width="140"
-                        Minimum="0" Maximum="100" Value="50"
+                        Minimum="0" Maximum="100"
+                        SmallChange="5" LargeChange="10"
+                        IsMoveToPointEnabled="True"
                         VerticalAlignment="Center"
                         Margin="12,0,0,0"/>
             </Grid>

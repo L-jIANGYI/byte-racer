@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
+﻿using ByteRacer.Game;
+using ByteRacer.Models;
+using ByteRacer.Services;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using ByteRacer.Game;
-using ByteRacer.Models;
 
 namespace ByteRacer.Views
 {
@@ -49,6 +50,7 @@ namespace ByteRacer.Views
             PauseMenu.ResumeClicked += ResumeGame;
             PauseMenu.RestartClicked += RestartGame;
             PauseMenu.ExitClicked += ExitToStart;
+            PauseMenu.VolumeChanged += SetVolume;
         }
 
         #region ------------------------- Start / Stop -------------------------
@@ -324,7 +326,8 @@ namespace ByteRacer.Views
             double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
             DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
                              $"{kmh:0} km/h\n" +
-                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s";
+                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
+                             $"volume  {GetVolume():0}";
         }
 
         #endregion
@@ -340,7 +343,7 @@ namespace ByteRacer.Views
 
             _gameState.Pause();
             _input.Clear();
-            PauseMenu.Show();
+            PauseMenu.Show(GetVolume());
         }
 
         /// <summary>
@@ -404,6 +407,28 @@ namespace ByteRacer.Views
 
             _input.Clear();
             _gameState.EndQuiz();
+        }
+
+        #endregion
+
+        #region ------------------------- Volume tijdelijk -------------------------
+
+        private static double _volume = 50;
+
+        /// <summary>
+        /// Huidig volume, 0 ~ 100.
+        /// </summary>
+        private static double GetVolume()
+        {
+            return _volume;
+        }
+
+        /// <summary>
+        /// Volume aangepast in het pauzemenu, 0 ~ 100.
+        /// </summary>
+        private static void SetVolume(double volume)
+        {
+            _volume = Math.Clamp(volume, 0, 100);
         }
 
         #endregion
