@@ -18,5 +18,110 @@
     "question": "Waar wordt Python het meest voor gebruikt?",
     "answers": [ "AI/Machine Learning", "Games", "Frontend Web Development" ],
     "correctAnswer": 0
+  },
+  {
+    "question": "Hoe maak je een variabele met de naam 'leeftijd' en de waarde 18?",
+    "answers": [ "leeftijd == 18", "leeftijd = 18", "int leeftijd = 18" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke operator gebruik je om twee waarden met elkaar te vermenigvuldigen?",
+    "answers": [ "+", "*", "/" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke operator gebruik je om te controleren of twee waarden gelijk zijn?",
+    "answers": [ "=", "==", "!=" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Hoe schrijf je een commentaarregel in Python?",
+    "answers": [ "// Dit is commentaar", "# Dit is commentaar", "-- Dit is commentaar" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke functie zet een getal om naar een string?",
+    "answers": [ "str()", "int()", "float()" ],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Welke uitspraak gebruik je om een voorwaarde te controleren?",
+    "answers": [ "def", "for", "if" ],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Welke uitspraak gebruik je als een if-voorwaarde niet waar is?",
+    "answers": [ "then", "else", "next" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke operator betekent 'kleiner dan'?",
+    "answers": [ "<", ">", "=" ],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Welke operator betekent 'niet gelijk aan'?",
+    "answers": [ "==", "!=", "<>" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke 'loop' gebruik je vaak om door een lijst te lopen?",
+    "answers": [ "for", "if", "def" ],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Hoeveel keer wordt deze 'loop' uitgevoerd: for i in range(4)?",
+    "answers": [ "3 keer", "4 keer", "5 keer" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke 'loop' blijft herhalen zolang een voorwaarde waar is?",
+    "answers": [ "while", "if", "else" ],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Welke functie stopt een 'loop' direct?",
+    "answers": [ "stop", "exitloop", "break" ],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Welke functie voegt een element toe aan het einde van een lijst?",
+    "answers": [ "add()", "insert_end()", "append()" ],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Hoe krijg je het eerste element van de lijst getallen = [10, 20, 30]?",
+    "answers": [ "getallen[1]", "getallen[0]", "getallen.first()" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke operator gebruik je voor machten?",
+    "answers": [ "^", "**", "^^" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Hoe maak je een eigen functie in Python?",
+    "answers": [ "function mijnFunctie():", "def mijnFunctie():", "create mijnFunctie():" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke opdracht geeft een waarde terug vanuit een functie?",
+    "answers": [ "return", "print", "break" ],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Wat is de console output van print(2 == 2)?",
+    "answers": [ "2", "False", "True" ],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Welke methode maakt een string volledig in hoofdletters?",
+    "answers": [ "uppercase()", "upper()", "capital()" ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Welke uitspraak gebruik je om extra voorwaarden te controleren na een if?",
+    "answers": [ "elseif", "elif", "otherwise" ],
+    "correctAnswer": 1
   }
 ]
