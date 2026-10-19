@@ -94,6 +94,7 @@
         <!-- DebugText: buiten World, fixed Top, Left op scherm -->
         <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
+        <overlays:PauseOverlay x:Name="PauseOverlay" Visibility="Collapsed"/>
         <overlays:QuizOverlay x:Name="Quiz" Visibility="Collapsed"/>
     </Grid>
     

@@ -279,10 +279,6 @@ namespace ByteRacer.Views
 
             switch (_gameState.State)
             {
-                case RaceState.Paused:
-                    CenterText.Text = "PAUZE";
-                    CenterText.Visibility = Visibility.Visible;
-                    break;
                 case RaceState.Quiz:
                     CenterText.Text = "Quiz\n J = ✔ K = ❌";
                     CenterText.Visibility = Visibility.Visible;
@@ -346,6 +342,7 @@ namespace ByteRacer.Views
 
             _gameState.Pause();
             _input.Clear();
+            PauseOverlay.Show();
         }
 
         /// <summary>
@@ -357,6 +354,7 @@ namespace ByteRacer.Views
 
             _input.Clear();
             _gameState.Resume();
+            PauseOverlay.Hide();
         }
 
         /// <summary>
@@ -392,7 +390,7 @@ namespace ByteRacer.Views
             if (!_gameState.CanStartQuiz) return;
             _gameState.StartQuiz();
             _input.Clear();
-            Quiz.Show();
+            //Quiz.Show();
         }
 
         /// <summary>
