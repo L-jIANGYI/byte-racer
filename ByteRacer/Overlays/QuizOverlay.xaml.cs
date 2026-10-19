@@ -17,7 +17,7 @@ using System.Text.Json;
 namespace ByteRacer.Overlays
 {
     /// <summary>
-    /// methode om window te showen, maak wat vars aan en een random voor zo, lees de json, roep loadquestion method op
+    /// methode om window te showen, maak json option, wat vars en een random aan voor zo, lees de json, roep loadquestion method op
     /// </summary>
     public partial class QuizOverlay : UserControl
     {
@@ -26,8 +26,13 @@ namespace ByteRacer.Overlays
             Visibility = Visibility.Visible;
         }
 
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            ReadCommentHandling = JsonCommentHandling.Skip // zodat de comments in de json het niet verneuken :-)
+        };
+
         private List<Question> questions;
-        private Question currentQuestion;
+        private Question currentQuestion = null!;
         private Random random = new Random();
 
         public QuizOverlay()
@@ -35,13 +40,8 @@ namespace ByteRacer.Overlays
             InitializeComponent();
 
             string json = File.ReadAllText("Data/questions.json");
-            questions = JsonSerializer.Deserialize<List<Question>>(
-                json,
-                new JsonSerializerOptions
-                {
-                    ReadCommentHandling = JsonCommentHandling.Skip // zodat de comments in de json het niet verneuken :-)
-                }
-            );
+            questions = JsonSerializer.Deserialize<List<Question>>(json, JsonOptions)
+                ?? throw new InvalidOperationException("questions.json failed to parse");
 
             LoadQuestion();
         }
@@ -51,8 +51,8 @@ namespace ByteRacer.Overlays
         /// </summary>
         public class Question
         {
-            public string question {  get; set; }
-            public List<string> answers { get; set; }
+            public string question { get; set; } = string.Empty;
+            public List<string> answers { get; set; } = new();
             public int correctAnswer { get; set; }
         }
 
