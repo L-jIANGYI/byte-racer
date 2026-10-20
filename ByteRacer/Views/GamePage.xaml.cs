@@ -51,6 +51,8 @@ namespace ByteRacer.Views
             PauseMenu.RestartClicked += RestartGame;
             PauseMenu.ExitClicked += ExitToStart;
             PauseMenu.VolumeChanged += SetVolume;
+
+            Quiz.AnswerChecked += OnQuizAnswered;
         }
 
         #region ------------------------- Start / Stop -------------------------
@@ -391,7 +393,7 @@ namespace ByteRacer.Views
             if (!_gameState.CanStartQuiz) return;
             _gameState.StartQuiz();
             _input.Clear();
-            //Quiz.Show();
+            Quiz.Show();
         }
 
         /// <summary>

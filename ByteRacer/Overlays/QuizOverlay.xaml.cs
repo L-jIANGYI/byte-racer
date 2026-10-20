@@ -69,17 +69,18 @@ namespace ByteRacer.Overlays
         }
 
         /// <summary>
-        /// letterlijk gewoon een if statement, that's it
+        /// maak een event aan die we in GamePage verbinden met de OnQuizAnswered function, en invoke deze wanneer correct
         /// </summary>
+        public event Action<bool>? AnswerChecked;
+
         private void CheckAnswer(int answer)
         {
-            if (answer == currentQuestion.correctAnswer)
-                MessageBox.Show("antwoord was correct");
-            else
-                MessageBox.Show("antwoord was incorrect");
+            bool correct = answer == currentQuestion.correctAnswer;
 
             Visibility = Visibility.Collapsed;
             LoadQuestion();
+
+            AnswerChecked?.Invoke(correct);
         }
 
         /// <summary>
