@@ -84,21 +84,12 @@ namespace ByteRacer.Overlays
         }
 
         /// <summary>
-        /// roep CheckAnswer op met de bijbehorende answer
+        /// roep CheckAnswer op met de bijbehorende answer button Tag property
         /// </summary>
-        private void Click_Ans1(object sender, RoutedEventArgs e)
+        private void Click_Ans(object sender, RoutedEventArgs e)
         {
-            CheckAnswer(0);
-        }
-
-        private void Click_Ans2(object sender, RoutedEventArgs e)
-        {
-            CheckAnswer(1);
-        }
-
-        private void Click_Ans3(object sender, RoutedEventArgs e)
-        {
-            CheckAnswer(2);
+            if (sender is Button button && int.TryParse(button.Tag?.ToString(), out int answer))
+                CheckAnswer(answer);
         }
     }
 }

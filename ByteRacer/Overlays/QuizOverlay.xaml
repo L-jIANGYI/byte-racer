@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ByteRacer.Overlays"
              mc:Ignorable="d" 
-             FontFamily="{StaticResource PixelFont}"
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
@@ -111,7 +110,7 @@
                        RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </Border>
 
-            <Grid Grid.Row="1" Grid.Column="1" Margin="0,4,0,4" Background="#38000000">
+            <Grid Grid.Row="1" Grid.Column="1" Margin="0,4,0,4" Background="{StaticResource BoxBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -119,11 +118,11 @@
                 </Grid.RowDefinitions>
 
                 <Button x:Name="Answer1" Grid.Row="0" Content="ANSWER1"
-                        Style="{StaticResource AnswerButton}" Margin="7,7,7,7" Click="Click_Ans1"/>
+                        Style="{StaticResource AnswerButton}" Margin="7,7,7,7" Click="Click_Ans" Tag="0"/>
                 <Button x:Name="Answer2" Grid.Row="1" Content="ANSWER2"
-                        Style="{StaticResource AnswerButton}" Margin="7,7" Click="Click_Ans2"/>
+                        Style="{StaticResource AnswerButton}" Margin="7,7" Click="Click_Ans" Tag="1"/>
                 <Button x:Name="Answer3" Grid.Row="2" Content="ANSWER3"
-                        Style="{StaticResource AnswerButton}" Margin="7,7,7,7" Click="Click_Ans3"/>
+                        Style="{StaticResource AnswerButton}" Margin="7,7,7,7" Click="Click_Ans" Tag="2"/>
             </Grid>
         </Grid>
     </Border>
