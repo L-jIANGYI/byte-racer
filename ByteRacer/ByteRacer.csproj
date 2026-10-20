@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <None Remove="Assets\Fonts\PressStart2P-Regular.ttf" />
+    <None Remove="Assets\Images\Icons\python.png" />
+    <None Remove="Assets\Images\Icons\spdbst.png" />
     <None Remove="Data\questions.json" />
   </ItemGroup>
 
@@ -20,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Images\" />
     <Folder Include="Assets\Sounds\" />
   </ItemGroup>
 
@@ -28,6 +29,8 @@
     <Resource Include="Assets\Fonts\PressStart2P-Regular.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Images\Icons\python.png" />
+    <Resource Include="Assets\Images\Icons\spdbst.png" />
   </ItemGroup>
 
   <ItemGroup>
