@@ -52,13 +52,10 @@
     </UserControl.Resources>
 
     <Grid Background="#1E1E1E">
-
-        <!-- Background image: uncomment when the file exists -->
-        <!--
         <Image Source="pack://application:,,,/Assets/Images/background.png"
-               Stretch="UniformToFill"
-               RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-        -->
+       Stretch="UniformToFill"
+       RenderOptions.BitmapScalingMode="NearestNeighbor"
+       />
 
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Enter Name"
@@ -75,12 +72,12 @@
                      VerticalContentAlignment="Center"
                      Margin="0,0,0,30"/>
 
-            <Button Content="Play" FontSize="14" Width="120" Height="40"/>
+            <Button Content="Play" FontSize="14" Width="120" Height="40"  Click="PlayButton_Click"/>
         </StackPanel>
 
-        <Button Content="Back" FontSize="12" Width="70" Height="30"
+        <Button Content="Back" FontSize="12" Width="83" Height="33"
            
-                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
+                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0"
                 Click="ExitButton_Click"/>
     </Grid>
 </UserControl>

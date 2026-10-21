@@ -17,6 +17,7 @@ namespace ByteRacer.Views
         #region ---------------------- Properties -------------------------
 
         private readonly MainWindow _main;
+        private readonly string _playerName;
 
         // ---------- Display ----------
         private const double WorldWidth = 3000;
@@ -38,10 +39,11 @@ namespace ByteRacer.Views
 
         #endregion
 
-        public GamePage(MainWindow main)
+        public GamePage(MainWindow main, string playerName = "")
         {
             InitializeComponent();
             _main = main;
+            _playerName = playerName;
 
             World.Width = WorldWidth;
             World.Height = WorldHeight;
@@ -371,7 +373,7 @@ namespace ByteRacer.Views
         /// <summary>
         /// Opnieuw
         /// </summary>
-        private void RestartGame() => _main.ShowGame();
+        private void RestartGame() => _main.ShowGame(_playerName);
 
         /// <summary>
         /// Terug naar start
@@ -392,7 +394,7 @@ namespace ByteRacer.Views
             if (!_gameState.CanStartQuiz) return;
             _gameState.StartQuiz();
             _input.Clear();
-            Quiz.Show();
+            //Quiz.Show();
         }
 
         /// <summary>

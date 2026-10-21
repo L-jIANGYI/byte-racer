@@ -53,14 +53,14 @@
                     Margin="25,0,0,0"/>
                 </Grid>
 
-               
+
                 <UniformGrid Columns="3" Margin="0,35,0,0">
-                    <Button Content="Fullscreen" FontSize="10" Height="40" Margin="4,0"
-                    Click="FullscreenButton_Click"/>
-                    <Button Content="Borderless" FontSize="10" Height="40" Margin="4,0"
-                    Click="BorderlessButton_Click"/>
-                    <Button Content="Bordered" FontSize="10" Height="40" Margin="4,0"
-                    Click="BorderedButton_Click"/>
+                    <Button Content="Fullscreen" FontSize="10" Height="40"
+                    Click="FullscreenButton_Click" Width="115"/>
+                    <Button Content="Borderless" FontSize="10" Height="40"
+                    Click="BorderlessButton_Click" Width="115"/>
+                    <Button Content="Bordered" FontSize="10" Height="40"
+                    Click="BorderedButton_Click" Width="115"/>
                 </UniformGrid>
 
             </StackPanel>

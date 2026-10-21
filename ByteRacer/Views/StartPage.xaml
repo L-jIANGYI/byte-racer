@@ -43,12 +43,12 @@
     </UserControl.Resources>
     <Grid Background="#1E1E1E">
 
-        <!-- Background image: uncomment when the file exists -->
-        <!--
-    <Image Source="pack://application:,,,/Assets/Images/background.png"
-           Stretch="UniformToFill"
-           RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-    -->
+
+        <Image Source="pack://application:,,,/Assets/Images/background.png"
+       Stretch="UniformToFill"
+       RenderOptions.BitmapScalingMode="NearestNeighbor"
+       />
+
 
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="BYTE RACER"
