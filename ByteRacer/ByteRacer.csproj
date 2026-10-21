@@ -27,13 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\Fonts\PressStart2P-Regular.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Images\Icons\python.png" />
     <Resource Include="Assets\Images\Icons\spdbst.png" />
     <Resource Include="Assets\Images\background.png" />
-    </Resource>
   </ItemGroup>
 
   <ItemGroup>
