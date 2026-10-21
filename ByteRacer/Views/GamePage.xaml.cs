@@ -331,7 +331,8 @@ namespace ByteRacer.Views
             DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
                              $"{kmh:0} km/h\n" +
                              $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
-                             $"volume  {GetVolume():0}";
+                             $"volume  {GetVolume():0}\n" + $"{_playerName}"
+            ;
         }
 
         #endregion
@@ -395,7 +396,7 @@ namespace ByteRacer.Views
             if (!_gameState.CanStartQuiz) return;
             _gameState.StartQuiz();
             _input.Clear();
-            //Quiz.Show();
+            Quiz.Show();
         }
 
         /// <summary>
