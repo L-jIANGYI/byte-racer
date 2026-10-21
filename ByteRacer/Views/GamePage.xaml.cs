@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
+﻿using ByteRacer.Game;
+using ByteRacer.Models;
+using ByteRacer.Services;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using ByteRacer.Game;
-using ByteRacer.Models;
 
 namespace ByteRacer.Views
 {
@@ -47,6 +48,13 @@ namespace ByteRacer.Views
 
             World.Width = WorldWidth;
             World.Height = WorldHeight;
+
+            PauseMenu.ResumeClicked += ResumeGame;
+            PauseMenu.RestartClicked += RestartGame;
+            PauseMenu.ExitClicked += ExitToStart;
+            PauseMenu.VolumeChanged += SetVolume;
+
+            Quiz.AnswerChecked += OnQuizAnswered;
         }
 
         #region ------------------------- Start / Stop -------------------------
@@ -151,12 +159,6 @@ namespace ByteRacer.Views
                     break;
                 case Key.F:
                     _gameState.Finish();
-                    break;
-                case Key.R:
-                    RestartGame();
-                    break;
-                case Key.X:
-                    ExitToStart();
                     break;
                 case Key.Q:
                     OpenQuiz();
@@ -281,10 +283,6 @@ namespace ByteRacer.Views
 
             switch (_gameState.State)
             {
-                case RaceState.Paused:
-                    CenterText.Text = "PAUZE";
-                    CenterText.Visibility = Visibility.Visible;
-                    break;
                 case RaceState.Quiz:
                     CenterText.Text = "Quiz\n J = ✔ K = ❌";
                     CenterText.Visibility = Visibility.Visible;
@@ -332,7 +330,8 @@ namespace ByteRacer.Views
             double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
             DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
                              $"{kmh:0} km/h\n" +
-                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s";
+                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
+                             $"volume  {GetVolume():0}";
         }
 
         #endregion
@@ -348,6 +347,7 @@ namespace ByteRacer.Views
 
             _gameState.Pause();
             _input.Clear();
+            PauseMenu.Show(GetVolume());
         }
 
         /// <summary>
@@ -359,6 +359,7 @@ namespace ByteRacer.Views
 
             _input.Clear();
             _gameState.Resume();
+            PauseMenu.Hide();
         }
 
         /// <summary>
@@ -410,6 +411,28 @@ namespace ByteRacer.Views
 
             _input.Clear();
             _gameState.EndQuiz();
+        }
+
+        #endregion
+
+        #region ------------------------- Volume tijdelijk -------------------------
+
+        private static double _volume = 50;
+
+        /// <summary>
+        /// Huidig volume, 0 ~ 100.
+        /// </summary>
+        private static double GetVolume()
+        {
+            return _volume;
+        }
+
+        /// <summary>
+        /// Volume aangepast in het pauzemenu, 0 ~ 100.
+        /// </summary>
+        private static void SetVolume(double volume)
+        {
+            _volume = Math.Clamp(volume, 0, 100);
         }
 
         #endregion
