@@ -18,6 +18,7 @@ namespace ByteRacer.Views
         #region ---------------------- Properties -------------------------
 
         private readonly MainWindow _main;
+        private readonly string _playerName;
 
         // ---------- Display ----------
         private const double WorldWidth = 3000;
@@ -39,10 +40,11 @@ namespace ByteRacer.Views
 
         #endregion
 
-        public GamePage(MainWindow main)
+        public GamePage(MainWindow main, string playerName = "")
         {
             InitializeComponent();
             _main = main;
+            _playerName = playerName;
 
             World.Width = WorldWidth;
             World.Height = WorldHeight;
@@ -329,7 +331,8 @@ namespace ByteRacer.Views
             DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
                              $"{kmh:0} km/h\n" +
                              $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
-                             $"volume  {GetVolume():0}";
+                             $"volume  {GetVolume():0}\n" + $"{_playerName}"
+            ;
         }
 
         #endregion
@@ -372,7 +375,7 @@ namespace ByteRacer.Views
         /// <summary>
         /// Opnieuw
         /// </summary>
-        private void RestartGame() => _main.ShowGame();
+        private void RestartGame() => _main.ShowGame(_playerName);
 
         /// <summary>
         /// Terug naar start
