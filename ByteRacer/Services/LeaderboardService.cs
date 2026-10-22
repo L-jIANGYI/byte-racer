@@ -20,6 +20,13 @@ namespace ByteRacer.Services
             Save();
         }
 
+        public static List<PlayResult> GetTop(int count) => Ranked().Take(count).ToList();
+
+        public static int GetRank(PlayResult result) => Ranked().ToList().IndexOf(result) + 1;
+
+        private static IEnumerable<PlayResult> Ranked() =>
+            _results.OrderBy(r => r.RaceTime).ThenBy(r => r.Date);
+
         private static List<PlayResult> Load()
         {
             try

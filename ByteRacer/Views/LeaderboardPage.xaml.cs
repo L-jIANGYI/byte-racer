@@ -19,8 +19,61 @@ namespace ByteRacer.Views
             InitializeComponent();
             _main = main;
 
+            ShowResults(latest);
 
             Loaded += (s, e) => Focus();
+        }
+
+        private void ShowResults(PlayResult? latest)
+        {
+            List<PlayResult> top = LeaderboardService.GetTop(ShownCount);
+
+            var rows = new List<LeaderboardRow>();
+            for (int i = 0; i < ShownCount; i++)
+            {
+                int rank = i + 1;
+
+                if (i < top.Count)
+                {
+                    rows.Add(new LeaderboardRow
+                    {
+                        Rank = rank,
+                        Name = top[i].Name,
+                        Time = FormatTime(top[i].RaceTime),
+                        IsLatest = top[i] == latest
+                    });
+                }
+                else
+                {
+                    rows.Add(new LeaderboardRow { Rank = rank, IsEmpty = true });
+                }
+            }
+
+            ApplyRows(rows);
+
+            if (latest != null && !top.Contains(latest))
+            {
+                YourRankRow.Content = new LeaderboardRow
+                {
+                    Rank = LeaderboardService.GetRank(latest),
+                    Name = latest.Name,
+                    Time = FormatTime(latest.RaceTime),
+                    IsLatest = true
+                };
+                YourRankPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                YourRankPanel.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void ApplyRows(List<LeaderboardRow> rows)
+        {
+            FirstPlace.Content = rows[0];
+            SecondPlace.Content = rows[1];
+            ThirdPlace.Content = rows[2];
+            RestList.ItemsSource = rows.Skip(3).ToList();
         }
 
         private static string FormatTime(double seconds)
