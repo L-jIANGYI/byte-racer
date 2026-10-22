@@ -15,7 +15,6 @@ namespace ByteRacer
         {
             InitializeComponent();
             ShowStart();
-            //ShowGame();
             SoundService.PlayMusic("menu-music.mp3");
         }
 
