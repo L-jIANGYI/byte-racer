@@ -5,6 +5,9 @@ using System.Text.Json;
 
 namespace ByteRacer.Services
 {
+    /// <summary>
+    /// Ophalen en opslaan alle resultaten in %AppData%\ByteRacer\leaderboard.json.
+    /// </summary>
     public static class LeaderboardService
     {
         private static readonly string FilePath = Path.Combine(
@@ -14,19 +17,41 @@ namespace ByteRacer.Services
 
         private static readonly List<PlayResult> _results = Load();
 
+        /// <summary>
+        /// Nieuw resultaat toevoegen en opslaan.
+        /// </summary>
+        /// <param name="result"></param>
         public static void Add(PlayResult result)
         {
             _results.Add(result);
             Save();
         }
 
+        /// <summary>
+        /// Haalt top resultaten volgens 'count' op en sorteren op snelheid
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<PlayResult> GetTop(int count) => Ranked().Take(count).ToList();
 
+        /// <summary>
+        /// Haalt specifiek volgens rank het resultaat op
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public static int GetRank(PlayResult result) => Ranked().ToList().IndexOf(result) + 1;
 
+        /// <summary>
+        /// Resultaten sorteren van snelste naar langzaamste
+        /// </summary>
+        /// <returns></returns>
         private static IEnumerable<PlayResult> Ranked() =>
             _results.OrderBy(r => r.RaceTime).ThenBy(r => r.Date);
 
+        /// <summary>
+        /// Resultaten uit AppData laden
+        /// </summary>
+        /// <returns></returns>
         private static List<PlayResult> Load()
         {
             try
@@ -42,6 +67,9 @@ namespace ByteRacer.Services
             }
         }
 
+        /// <summary>
+        /// Resultaten opslaan in AppData
+        /// </summary>
         private static void Save()
         {
             try

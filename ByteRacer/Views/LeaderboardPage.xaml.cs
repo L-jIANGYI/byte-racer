@@ -12,7 +12,7 @@ namespace ByteRacer.Views
     public partial class LeaderboardPage : UserControl
     {
         private readonly MainWindow _main;
-        private const int ShownCount = 10;
+        private const int ShownCount = 10; // aantal resultaten laten zien
 
         public LeaderboardPage(MainWindow main, PlayResult? latest = null)
         {
@@ -24,6 +24,10 @@ namespace ByteRacer.Views
             Loaded += (s, e) => Focus();
         }
 
+        /// <summary>
+        /// Resultaten laten zien in leaderboard
+        /// </summary>
+        /// <param name="latest"></param>
         private void ShowResults(PlayResult? latest)
         {
             List<PlayResult> top = LeaderboardService.GetTop(ShownCount);
@@ -68,6 +72,10 @@ namespace ByteRacer.Views
             }
         }
 
+        /// <summary>
+        /// Resultaten die op podium staan en de rest
+        /// </summary>
+        /// <param name="rows"></param>
         private void ApplyRows(List<LeaderboardRow> rows)
         {
             FirstPlace.Content = rows[0];
@@ -81,6 +89,11 @@ namespace ByteRacer.Views
 
         private void BackButton_Click(object sender, RoutedEventArgs e) => _main.ShowStart();
 
+        /// <summary>
+        /// Enter / Esc ook terug naar startscherm kan
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key is Key.Enter or Key.Escape)
@@ -91,6 +104,9 @@ namespace ByteRacer.Views
         }
     }
 
+    /// <summary>
+    /// Data van een row om UI te bepalen
+    /// </summary>
     public class LeaderboardRow
     {
         public int Rank { get; init; }
