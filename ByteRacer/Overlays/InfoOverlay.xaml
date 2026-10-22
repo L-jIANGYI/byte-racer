@@ -5,8 +5,55 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ByteRacer.Overlays"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             d:DesignHeight="450" d:DesignWidth="800" d:FontFamily  ="{StaticResource PixelFont}">
+    <Grid Background="#99000000">
+
+        <Button Content="Close" FontSize="12" Width="90" Height="40"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
+                Click="CloseButton_Click"/>
+
+        <Border Background="Black"
+                BorderBrush="#FFCC00"
+                BorderThickness="4"
+                Padding="30"
+                MaxWidth="710"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Height="340" Width="690">
+
+            <StackPanel>
+
+                <TextBlock Text="INFO"
+                           Foreground="White"
+                           FontSize="42"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,25"/>
+
+                <TextBlock Text="Byte Racer is een racegame van bovenaf. Rij zo snel mogelijk naar de finish."
+                           Foreground="White"
+                           FontSize="12"
+                           LineHeight="24"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Margin="0,0,0,20"/>
+
+                <TextBlock Text="Onderweg krijg je op bepaalde plekken een vraag. Heb je het goed, dan krijg je een speed boost. Heb je het fout, dan word je vertraagd."
+                           Foreground="White"
+                           FontSize="12"
+                           LineHeight="24"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Margin="0,0,0,25"/>
+
+                <TextBlock Text="BESTURING"
+                           Foreground="#FFCC00"
+                           FontSize="16"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,10"/>
+
+                <TextBlock Text="W A S D of de ↑ ← ↓ →"
+                           Foreground="White"
+                           FontSize="12"
+                           TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>
