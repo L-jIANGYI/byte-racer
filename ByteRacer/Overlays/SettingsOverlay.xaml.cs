@@ -23,7 +23,7 @@ namespace ByteRacer.Overlays
         // value from the XAML (50) doesn't overwrite the real volume
         private bool _ready = false;
 
-        private MainWindow Main => (MainWindow)Application.Current.MainWindow;
+        private MainWindow _Main => (MainWindow)Application.Current.MainWindow;
 
         public SettingsOverlay()
         {
