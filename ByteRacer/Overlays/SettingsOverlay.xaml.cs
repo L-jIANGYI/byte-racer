@@ -23,7 +23,7 @@ namespace ByteRacer.Overlays
         // value from the XAML (50) doesn't overwrite the real volume
         private bool _ready = false;
 
-        private MainWindow _Main => (MainWindow)Application.Current.MainWindow;
+        private MainWindow _main => (MainWindow)Application.Current.MainWindow;
 
         public SettingsOverlay()
         {
@@ -40,11 +40,11 @@ namespace ByteRacer.Overlays
             Visibility = Visibility.Collapsed;
         }
 
-        private void FullscreenButton_Click(object sender, RoutedEventArgs e) => Main.SetFullscreen();
+        private void FullscreenButton_Click(object sender, RoutedEventArgs e) => _main.SetFullscreen();
 
-        private void BorderlessButton_Click(object sender, RoutedEventArgs e) => Main.SetBorderless();
+        private void BorderlessButton_Click(object sender, RoutedEventArgs e) => _main.SetBorderless();
 
-        private void BorderedButton_Click(object sender, RoutedEventArgs e) => Main.SetBordered();
+        private void BorderedButton_Click(object sender, RoutedEventArgs e) => _main.SetBordered();
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {

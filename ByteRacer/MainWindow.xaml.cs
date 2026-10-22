@@ -23,11 +23,10 @@ namespace ByteRacer
         public void ShowGame(string playerName = "") => PageHost.Content = new GamePage(this, playerName);
         public void ShowLeaderboard() => PageHost.Content = new LeaderboardPage(this);
         public void ShowNameEntry() => PageHost.Content = new NameEntryPage(this);
-        public void ShowQuizOverlay() => PageHost.Content = new QuizOverlay();
 
         public void SetFullscreen()
         {
-            WindowState = WindowState.Normal;  
+            WindowState = WindowState.Normal;
             WindowStyle = WindowStyle.None;
             ResizeMode = ResizeMode.NoResize;
             WindowState = WindowState.Maximized;
