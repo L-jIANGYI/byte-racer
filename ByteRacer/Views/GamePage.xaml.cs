@@ -1,6 +1,5 @@
 ﻿using ByteRacer.Game;
 using ByteRacer.Models;
-using ByteRacer.Services;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -332,7 +331,7 @@ namespace ByteRacer.Views
                              $"{kmh:0} km/h\n" +
                              $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
                              $"volume  {GetVolume():0}\n" + $"{_playerName}"
-            ;
+                ;
         }
 
         #endregion

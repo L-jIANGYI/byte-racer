@@ -175,19 +175,25 @@
 
                 <!-- Plek 4 t/m 10 -->
                 <Border Background="Black"
-                    BorderBrush="{StaticResource AccentBrush}" BorderThickness="4"
-                    Width="340" Padding="8,10" Margin="28,0,0,0"
-                    VerticalAlignment="Bottom">
-                    <ItemsControl x:Name="RestList" Focusable="False"
-                              ItemTemplate="{StaticResource RowTemplate}"/>
+                        BorderBrush="{StaticResource AccentBrush}" BorderThickness="4"
+                        Width="340" Padding="8,10" Margin="28,0,0,0"
+                        VerticalAlignment="Bottom">
+                    <StackPanel>
+                        <ItemsControl x:Name="RestList" Focusable="False"
+                                      ItemTemplate="{StaticResource RowTemplate}"/>
+
+                        <!-- Eigen plek buiten de top 10 -->
+                        <StackPanel x:Name="YourRankPanel" Visibility="Collapsed">
+                            <TextBlock Text="· · ·" FontSize="10"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       HorizontalAlignment="Center" Margin="0,2,0,4"/>
+                            <ContentControl x:Name="YourRankRow" Focusable="False"
+                                            ContentTemplate="{StaticResource RowTemplate}"/>
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
             </StackPanel>
 
-            <!-- Tekst voor als je niet in de top 10 komt -->
-            <TextBlock x:Name="YourRankText" Visibility="Collapsed"
-                   FontSize="10" Foreground="{StaticResource AccentBrush}"
-                   HorizontalAlignment="Center" Margin="0,22,0,0"
-                   Effect="{StaticResource TextShadow}"/>
         </StackPanel>
     </Grid>
 </UserControl>
