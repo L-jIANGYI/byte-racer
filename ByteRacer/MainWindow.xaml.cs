@@ -1,6 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
-using ByteRacer.Overlays;
 using ByteRacer.Services;
 using ByteRacer.Views;
 
