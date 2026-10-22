@@ -3,10 +3,109 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ByteRacer.Overlays"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    <UserControl.Resources>
+
+        <!-- Knoppen style: normaal wit, muis over geel -->
+        <Style x:Key="MenuTextButton" TargetType="Button">
+            <!--Basis style-->
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Margin" Value="0,14"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"></Setter>
+
+            <!-- Transparante achtergrond met schaduw -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent" Padding="8,4">
+                            <ContentPresenter HorizontalAlignment="Center">
+                                <ContentPresenter.Effect>
+                                    <DropShadowEffect Color="Black" BlurRadius="0" ShadowDepth="3" Direction="-45" Opacity="1"/>
+                                </ContentPresenter.Effect>
+                            </ContentPresenter>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <!-- Muis over style -->
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#F0B429"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Background="#99000000">
+
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <!-- titel -->
+                <RowDefinition Height="Auto"/>
+                <!-- Doorgaan + volume -->
+                <RowDefinition Height="Auto"/>
+                <!-- Opnieuw -->
+                <RowDefinition Height="Auto"/>
+                <!-- Exit -->
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <!-- knoppen -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- volume -->
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Titel -->
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                       Text="Pauze" FontSize="48" Foreground="White"
+                       HorizontalAlignment="Center" Margin="0,0,0,32">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="0" ShadowDepth="4" Direction="-45" Opacity="1"/>
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <!-- Knoppen -->
+            <Button x:Name="ResumeButton" Grid.Row="1" Grid.Column="0"
+                    Content="Doorgaan" Style="{StaticResource MenuTextButton}" Click="Resume_Click"/>
+            <Button Grid.Row="2" Grid.Column="0"
+                    Content="Opnieuw"  Style="{StaticResource MenuTextButton}" Click="Restart_Click"/>
+            <Button Grid.Row="3" Grid.Column="0"
+                    Content="Exit"     Style="{StaticResource MenuTextButton}" Click="Exit_Click"/>
+
+            <!-- Volume slider: zelfde als in SettingsOverlay -->
+            <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="32,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Viewbox Grid.Column="0" Width="28" Height="24">
+                    <Canvas Width="14" Height="12" RenderOptions.EdgeMode="Aliased">
+                        <Path Fill="#FFCC00"
+                              Data="M0,4 H3 V3 H4 V2 H5 V1 H6 V0 H7 V12 H6 V11 H5 V10 H4 V9 H3 V8 H0 Z"/>
+                        <Path x:Name="Wave1" Fill="#FFCC00" Data="M9,4 H10 V8 H9 Z"/>
+                        <Path x:Name="Wave2" Fill="#FFCC00" Data="M11,2 H12 V10 H11 Z"/>
+                        <Path x:Name="Wave3" Fill="#FFCC00" Data="M13,0 H14 V12 H13 Z"/>
+                    </Canvas>
+                </Viewbox>
+
+                <Slider x:Name="VolumeSlider"
+                        Grid.Column="1"
+                        Width="140"
+                        Minimum="0" Maximum="100"
+                        SmallChange="5" LargeChange="10"
+                        IsMoveToPointEnabled="True"
+                        Focusable="False"
+                        VerticalAlignment="Center"
+                        Margin="12,0,0,0"/>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

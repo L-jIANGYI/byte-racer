@@ -25,5 +25,23 @@ namespace ByteRacer.Views
             InitializeComponent();
             _main = main;
         }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            _main.ShowStart();
+        }
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            string name = NameTextBox.Text.Trim();
+
+            if (name == "")
+            {
+                NameTextBox.Focus();
+                return;
+            }
+
+            _main.ShowGame(name);
+        }
     }
 }

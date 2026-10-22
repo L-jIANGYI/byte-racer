@@ -13,9 +13,6 @@ using System.Windows.Shapes;
 
 namespace ByteRacer.Views
 {
-    /// <summary>
-    /// Interaction logic for StartPage.xaml
-    /// </summary>
     public partial class StartPage : UserControl
     {
         private readonly MainWindow _main;
@@ -23,8 +20,31 @@ namespace ByteRacer.Views
         public StartPage(MainWindow main)
         {
             InitializeComponent();
-
             _main = main;
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            _main.ShowNameEntry();
+        }
+
+        private void LeaderboardButton_Click(object sender, RoutedEventArgs e)
+        {
+            _main.ShowLeaderboard();
+        }
+
+        private void InfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            InfoPanel.Visibility = Visibility.Visible;
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPanel.Visibility = Visibility.Visible;
         }
     }
 }
