@@ -47,7 +47,7 @@ Data="M 1750,300
     StrokeEndLineCap="Round"/>
 
                 <!-- Asfalt -->
-                <Path
+                <Path x:Name="TrackPath"
    Data="M 1750,300
     C 2200,0 3250,300 2650,800
     C 2650,800 2800,2000 2350,1100
