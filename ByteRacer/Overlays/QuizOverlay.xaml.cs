@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.Json;
+using Path = System.IO.Path;
 
 namespace ByteRacer.Overlays
 {
@@ -31,7 +32,7 @@ namespace ByteRacer.Overlays
             ReadCommentHandling = JsonCommentHandling.Skip // zodat de comments in de json het niet verneuken :-)
         };
 
-        private List<Question> questions;
+        private List<Question> questions = new();
         private Question currentQuestion = null!;
         private Random random = new Random();
 
@@ -39,9 +40,12 @@ namespace ByteRacer.Overlays
         {
             InitializeComponent();
 
-            string json = File.ReadAllText("Data/questions.json");
+            string path = Path.Combine(AppContext.BaseDirectory, "Data", "questions.json");
+            string json = File.ReadAllText(path);
+
             questions = JsonSerializer.Deserialize<List<Question>>(json, JsonOptions)
-                ?? throw new InvalidOperationException("questions.json failed to parse");
+                        ?? throw new InvalidOperationException("questions.json failed to parse");
+
 
             LoadQuestion();
         }
