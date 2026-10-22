@@ -34,6 +34,71 @@
                     <TranslateTransform x:Name="Camera"/>
                 </Canvas.RenderTransform>
 
+                <Path
+Data="M 1750,300
+    C 2200,0 3250,300 2650,800
+    C 2650,800 2800,2000 2350,1100
+    C 1525,1400 1000,1100 1000,1100
+    C 625,275 1150,50 1750,300"
+    Stroke="White"
+    StrokeThickness="190"
+    StrokeLineJoin="Round"
+    StrokeStartLineCap="Round"
+    StrokeEndLineCap="Round"/>
+
+                <!-- Asfalt -->
+                <Path
+   Data="M 1750,300
+    C 2200,0 3250,300 2650,800
+    C 2650,800 2800,2000 2350,1100
+    C 1525,1400 1000,1100 1000,1100
+    C 625,275 1150,50 1750,300"
+    Stroke="#555555"
+    StrokeThickness="160"
+    StrokeLineJoin="Round"
+    StrokeStartLineCap="Round"
+    StrokeEndLineCap="Round"/>
+
+                <Rectangle
+                    Width="160"
+                    Height="24"
+                    Canvas.Left="1905"
+                    Canvas.Top="192"
+                    StrokeThickness="0"
+                    RenderTransformOrigin="0.5,0.5">
+
+                    <Rectangle.RenderTransform>
+                        <RotateTransform Angle="77.5"/>
+                    </Rectangle.RenderTransform>
+
+                    <Rectangle.Fill>
+                        <DrawingBrush
+                            TileMode="Tile"
+                            Viewport="0,0,20,12"
+                            ViewportUnits="Absolute">
+
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup>
+                                    <GeometryDrawing Brush="White">
+                                        <GeometryDrawing.Geometry>
+                                            <RectangleGeometry Rect="0,0,20,12"/>
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+
+                                    <GeometryDrawing Brush="Black">
+                                        <GeometryDrawing.Geometry>
+                                            <GeometryGroup>
+                                                <RectangleGeometry Rect="0,0,10,6"/>
+                                                <RectangleGeometry Rect="10,6,10,6"/>
+                                            </GeometryGroup>
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+
                 <!-- Auto: in World Canvas, met World bewegen -->
                 <Grid x:Name="CarVisual" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
@@ -97,5 +162,5 @@
         <overlays:PauseOverlay x:Name="PauseMenu" Visibility="Collapsed"/>
         <overlays:QuizOverlay x:Name="Quiz" Visibility="Collapsed"/>
     </Grid>
-    
+
 </UserControl>
