@@ -37,6 +37,7 @@ namespace ByteRacer.Views
         private readonly PlayerInput _input = new PlayerInput();
         private readonly Car _car = new Car();
         private readonly GameState _gameState = new GameState();
+        private readonly LapTracker _lapTracker = new LapTracker();
 
         #endregion
 
@@ -66,8 +67,8 @@ namespace ByteRacer.Views
         /// <param name="e"></param>
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _car.X = WorldWidth / 2;
-            _car.Y = WorldHeight / 2;
+            _car.X = 1975;
+            _car.Y = 204;
             _car.Angle = 0;
             _car.Speed = 0;
 
@@ -202,6 +203,12 @@ namespace ByteRacer.Views
                 case RaceState.Racing:
                     _car.Update(dt, _input.Read(), onTrack: true);
                     KeepCarInWorld();
+
+                    // als laptracker update true is doe dan functie gamestatefinish
+                    if (_lapTracker.Update(_car.X, _car.Y))
+                    {
+                        _gameState.Finish();
+                    }
                     break;
 
                 case RaceState.Finished:
@@ -280,6 +287,8 @@ namespace ByteRacer.Views
         {
             RaceTimeText.Text = FormatTime(_gameState.RaceTime);
             DrawStartLights();
+            // toon het huidige lap en het max aantal lap
+            LapText.Text = $"Lap {_lapTracker.LapCount} / {_lapTracker.LapMax}";
 
             switch (_gameState.State)
             {

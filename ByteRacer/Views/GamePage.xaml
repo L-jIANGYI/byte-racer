@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="ByteRacer.Views.GamePage"
+             xmlns:game="clr-namespace:ByteRacer.Game"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -34,27 +35,20 @@
                     <TranslateTransform x:Name="Camera"/>
                 </Canvas.RenderTransform>
 
+                <!-- Witte rand -->
                 <Path
-Data="M 1750,300
-    C 2200,0 3250,300 2650,800
-    C 2650,800 2800,2000 2350,1100
-    C 1525,1400 1000,1100 1000,1100
-    C 625,275 1150,50 1750,300"
+    Data="{x:Static game:Track.Centerline}"
     Stroke="White"
-    StrokeThickness="190"
+    StrokeThickness="{x:Static game:Track.EdgeWidth}"
     StrokeLineJoin="Round"
     StrokeStartLineCap="Round"
     StrokeEndLineCap="Round"/>
 
                 <!-- Asfalt -->
                 <Path
-   Data="M 1750,300
-    C 2200,0 3250,300 2650,800
-    C 2650,800 2800,2000 2350,1100
-    C 1525,1400 1000,1100 1000,1100
-    C 625,275 1150,50 1750,300"
+    Data="{x:Static game:Track.Centerline}"
     Stroke="#555555"
-    StrokeThickness="160"
+    StrokeThickness="{x:Static game:Track.RoadWidth}"
     StrokeLineJoin="Round"
     StrokeStartLineCap="Round"
     StrokeEndLineCap="Round"/>
@@ -125,6 +119,14 @@ Data="M 1750,300
 
         <TextBlock x:Name="RaceTimeText" Text="00:00.00" FontSize="28" Foreground="White"
                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0"/>
+
+        <TextBlock x:Name="LapText"
+           Text="Lap 1 / 3"
+           FontSize="24"
+           Foreground="White"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Top"
+           Margin="0,50,0,0"/>
 
         <TextBlock x:Name="CenterText" Visibility="Collapsed" IsHitTestVisible="False"
                    FontSize="96" Foreground="White" TextAlignment="Center"
