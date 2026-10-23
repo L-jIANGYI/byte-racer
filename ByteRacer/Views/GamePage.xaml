@@ -100,11 +100,7 @@ Data="M 1750,300
                 </Rectangle>
 
                 <!-- Auto: in World Canvas, met World bewegen -->
-<<<<<<< HEAD
-                <Grid x:Name="CarVisual" Panel.ZIndex="2" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
-=======
-                <Grid x:Name="CarVisual" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
->>>>>>> dev
+                <Grid x:Name="CarVisual" Panel.ZIndex="2" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <RotateTransform x:Name="CarRotation"></RotateTransform>
                     </Grid.RenderTransform>
