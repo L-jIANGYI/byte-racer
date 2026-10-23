@@ -2,5 +2,50 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <FontFamily x:Key="PixelFont">pack://application:,,,/ByteRacer;component/Assets/Fonts/#Press Start 2P</FontFamily>
-    
+
+    <!-- ===== Kleuren ===== -->
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#1E1E1E"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#FFCC00"/>
+    <SolidColorBrush x:Key="AccentShadowBrush" Color="#7A5C00"/>
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#FFE066"/>
+    <SolidColorBrush x:Key="MutedTextBrush" Color="#6B6B6B"/>
+
+    <!-- ===== schaduw ===== -->
+    <DropShadowEffect x:Key="TitleShadow" Color="Black" BlurRadius="0" ShadowDepth="4" Direction="-45" Opacity="1"/>
+    <DropShadowEffect x:Key="TextShadow" Color="Black" BlurRadius="0" ShadowDepth="2" Direction="-45" Opacity="1"/>
+
+    <!-- ===== Button Pixel Style ===== -->
+    <Style x:Key="PixelButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Foreground" Value="#1E1E1E"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid RenderOptions.EdgeMode="Aliased">
+                        <Grid Margin="4,4,0,0">
+                            <Border Background="{StaticResource AccentShadowBrush}" Margin="4,0"/>
+                            <Border Background="{StaticResource AccentShadowBrush}" Margin="0,4"/>
+                        </Grid>
+                        <Grid x:Name="face" Margin="0,0,4,4">
+                            <Border Background="{TemplateBinding Background}" Margin="4,0"/>
+                            <Border Background="{TemplateBinding Background}" Margin="0,4"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource AccentHoverBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="face" Property="Margin" Value="4,4,0,0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>
