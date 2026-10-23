@@ -10,7 +10,7 @@
 
         <Button Content="Back" FontSize="12" Width="90" Height="40"
                 HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
-                Click="BackButton_Click"/>
+                Click="BackButton_Click" Style="{StaticResource PixelButton}"/>
 
         <TextBlock Text="SETTINGS"
                    Foreground="White"
@@ -56,11 +56,11 @@
 
                 <UniformGrid Columns="3" Margin="0,35,0,0">
                     <Button Content="Fullscreen" FontSize="10" Height="40"
-                    Click="FullscreenButton_Click" Width="115"/>
+                    Click="FullscreenButton_Click" Width="115" Style="{StaticResource PixelButton}"/>
                     <Button Content="Borderless" FontSize="10" Height="40"
-                    Click="BorderlessButton_Click" Width="115"/>
+                    Click="BorderlessButton_Click" Width="115" Style="{StaticResource PixelButton}"/>
                     <Button Content="Bordered" FontSize="10" Height="40"
-                    Click="BorderedButton_Click" Width="115"/>
+                    Click="BorderedButton_Click" Width="115" Style="{StaticResource PixelButton}"/>
                 </UniformGrid>
 
             </StackPanel>

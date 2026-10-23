@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.Json;
+using ByteRacer.Services;
 using Path = System.IO.Path;
 
 namespace ByteRacer.Overlays
@@ -84,7 +85,8 @@ namespace ByteRacer.Overlays
             Visibility = Visibility.Collapsed;
             LoadQuestion();
 
-            AnswerChecked?.Invoke(correct);
+            SoundService.PlayEffect(correct ? "correct.wav" : "wrong.wav",
+                        () => AnswerChecked?.Invoke(correct));
         }
 
         /// <summary>
