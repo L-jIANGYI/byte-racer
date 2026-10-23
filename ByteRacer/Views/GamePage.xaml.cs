@@ -217,7 +217,7 @@ namespace ByteRacer.Views
                     if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
                     {
                         StopLoop();
-                        _main.ShowLeaderboard();
+                        SaveResultAndShowLeaderboard();
                         return;
                     }
 
@@ -280,6 +280,20 @@ namespace ByteRacer.Views
             Camera.Y += (targetY - Camera.Y) * t;
         }
 
+        private void DrawDebug()
+        {
+            double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
+            DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
+                             $"{kmh:0} km/h\n" +
+                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
+                             $"volume  {GetVolume():0}\n" + $"{_playerName}"
+                ;
+        }
+
+        #endregion
+
+        #region ------------------------- Start / Finish -------------------------
+
         /// <summary>
         /// Verwerk de racetijd en CenterText o.b.v. status aanpassen 
         /// </summary>
@@ -292,10 +306,6 @@ namespace ByteRacer.Views
 
             switch (_gameState.State)
             {
-                case RaceState.Quiz:
-                    CenterText.Text = "Quiz\n J = ✔ K = ❌";
-                    CenterText.Visibility = Visibility.Visible;
-                    break;
                 case RaceState.Finished:
                     CenterText.Text = $"FINISH\n{FormatTime(_gameState.RaceTime)}";
                     CenterText.Visibility = Visibility.Visible;
@@ -334,14 +344,19 @@ namespace ByteRacer.Views
         private static string FormatTime(double seconds)
             => TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\.ff");
 
-        private void DrawDebug()
+        /// <summary>
+        /// Het resultaat opslaan en naar de leaderboard
+        /// </summary>
+        private void SaveResultAndShowLeaderboard()
         {
-            double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
-            DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
-                             $"{kmh:0} km/h\n" +
-                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
-                             $"volume  {GetVolume():0}\n" + $"{_playerName}"
-            ;
+            var result = new PlayResult
+            {
+                Name = _playerName,
+                RaceTime = _gameState.RaceTime
+            };
+
+            LeaderboardService.Add(result);
+            _main.ShowLeaderboard(result);
         }
 
         #endregion

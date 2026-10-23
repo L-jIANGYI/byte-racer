@@ -22,10 +22,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="Transparent" Padding="8,4">
-                            <ContentPresenter HorizontalAlignment="Center">
-                                <ContentPresenter.Effect>
-                                    <DropShadowEffect Color="Black" BlurRadius="0" ShadowDepth="3" Direction="-45" Opacity="1"/>
-                                </ContentPresenter.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" Effect="{StaticResource TextShadow}">
                             </ContentPresenter>
                         </Border>
                     </ControlTemplate>
@@ -65,10 +62,8 @@
             <!-- Titel -->
             <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
                        Text="Pauze" FontSize="48" Foreground="White"
-                       HorizontalAlignment="Center" Margin="0,0,0,32">
-                <TextBlock.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="0" ShadowDepth="4" Direction="-45" Opacity="1"/>
-                </TextBlock.Effect>
+                       HorizontalAlignment="Center" Margin="0,0,0,32" 
+                       Effect="{StaticResource TitleShadow}">
             </TextBlock>
 
             <!-- Knoppen -->
