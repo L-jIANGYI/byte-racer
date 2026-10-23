@@ -17,6 +17,11 @@ namespace ByteRacer.Hud
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Init MiniMap: De grootte van de racebaan en waar de auto moet staan
+        /// </summary>
+        /// <param name="centerline"></param>
+        /// <param name="roadWidth"></param>
         public void Setup(Geometry centerline, double roadWidth)
         {
             Rect bounds = centerline.GetRenderBounds(new Pen(Brushes.Black, roadWidth));
@@ -37,6 +42,12 @@ namespace ByteRacer.Hud
             CarMarker.StrokeThickness = size / 8;
         }
 
+        /// <summary>
+        /// De auto's positie en richting in MiniMap bijwerken
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="angle"></param>
         public void UpdateCar(double x, double y, double angle)
         {
             Canvas.SetLeft(CarMarker, x - CarMarker.Width / 2);
