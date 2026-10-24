@@ -12,6 +12,7 @@
 		<None Remove="Assets\Fonts\PressStart2P-Regular.ttf" />
 		<None Remove="Assets\Images\background.png" />
 		<None Remove="Assets\Images\carsprite.png" />
+		<None Remove="Assets\Images\Icons\quizblock.png" />
 		<None Remove="Assets\Sounds\menu-music.mp3" />
 		<None Remove="Assets\Images\Icons\python.png" />
 		<None Remove="Assets\Images\Icons\spdbst.png" />
@@ -33,6 +34,7 @@
 		</Resource>
 		<Resource Include="Assets\Images\carsprite.png" />
 		<Resource Include="Assets\Images\Icons\python.png" />
+		<Resource Include="Assets\Images\Icons\quizblock.png" />
 		<Resource Include="Assets\Images\Icons\spdbst.png" />
 		<Resource Include="Assets\Images\background.png" />
 	</ItemGroup>
