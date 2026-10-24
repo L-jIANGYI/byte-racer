@@ -233,22 +233,19 @@ namespace ByteRacer.Views
 
                         break;
                     }
-
                 case RaceState.Finished:
+                    _car.Update(dt, CarInput.None, onTrack: true);
+                    KeepCarInWorld();
+                    if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
                     {
-                        _car.Update(dt, CarInput.None, onTrack: true);
-                        KeepCarInWorld();
-
-                        if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
-                        {
-                            StopLoop();
-                            _main.ShowLeaderboard();
-                            return;
-                        }
-
-                        break;
+                        StopLoop();
+                        SaveResultAndShowLeaderboard();
+                        return;
                     }
+
+                    break;
             }
+        }
 
             UpdateCheckpoints();
             DrawCar();
