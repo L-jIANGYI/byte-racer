@@ -1,14 +1,18 @@
-﻿<UserControl x:Class="ByteRacer.Views.GamePage"
-             xmlns:game="clr-namespace:ByteRacer.Game"
+<UserControl x:Class="ByteRacer.Views.GamePage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:game="clr-namespace:ByteRacer.Game"
              xmlns:overlays="clr-namespace:ByteRacer.Overlays"
-             mc:Ignorable="d" 
-             d:DesignHeight="2000" d:DesignWidth="3000 " d:Background="White"
+             xmlns:hud="clr-namespace:ByteRacer.Hud"
+             mc:Ignorable="d"
+             d:DesignHeight="2000"
+             d:DesignWidth="3000"
+             d:Background="White"
              Loaded="OnLoaded"
              Unloaded="OnUnloaded">
+
     <Grid>
         <!-- Viewport: wat op scherm ziet -->
         <Canvas x:Name="Viewport" Background="Aqua" ClipToBounds="True">
@@ -95,12 +99,12 @@
                 </Rectangle>
 
                 <!-- Auto: in World Canvas, met World bewegen -->
-                <Grid x:Name="CarVisual" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
+                <Grid x:Name="CarVisual" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <RotateTransform x:Name="CarRotation"></RotateTransform>
                     </Grid.RenderTransform>
-                    <Border Background="Red" CornerRadius="5"></Border>
-                    <Border Background="DarkGray" Width="7" HorizontalAlignment="Right" Margin="0,3,7,3" CornerRadius="2"></Border>
+                    <Image Source="pack://application:,,,/Assets/Images/carsprite.png"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor"></Image>
                 </Grid>
             </Canvas>
         </Canvas>
@@ -137,6 +141,8 @@
             </TextBlock.Effect>
         </TextBlock>
 
+        <hud:MiniMap x:Name="MiniMap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"></hud:MiniMap>
+
         <Button x:Name="PauseButton"
                 Width="56" Height="56"
                 Margin="16"
@@ -160,7 +166,7 @@
         </Button>
 
         <!-- DebugText: buiten World, fixed Top, Left op scherm -->
-        <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
         <overlays:PauseOverlay x:Name="PauseMenu" Visibility="Collapsed"/>
         <overlays:QuizOverlay x:Name="Quiz" Visibility="Collapsed"/>

@@ -16,6 +16,11 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class GamePage : UserControl
     {
+        // even testen voor minimap
+        private static readonly Geometry TestTrack = Geometry.Parse(
+            "M 1750,300 C 2200,0 3250,300 2650,800 C 2650,800 2800,2000 2350,1100 " +
+            "C 1525,1400 1000,1100 1000,1100 C 625,275 1150,50 1750,300 Z");
+
         #region ---------------------- Properties -------------------------
 
         private readonly MainWindow _main;
@@ -77,6 +82,8 @@ namespace ByteRacer.Views
             _car.Y = 204;
             _car.Angle = 0;
             _car.Speed = 0;
+
+            MiniMap.Setup(TestTrack, 160);
 
             UpdateCamera(0, true);
 
@@ -402,6 +409,10 @@ namespace ByteRacer.Views
             Camera.Y += (targetY - Camera.Y) * t;
         }
 
+        #endregion
+
+        #region ------------------------- Start / Finish -------------------------
+
         /// <summary>
         /// Verwerk de racetijd en CenterText o.b.v. status aanpassen 
         /// </summary>
@@ -409,6 +420,7 @@ namespace ByteRacer.Views
         {
             RaceTimeText.Text = FormatTime(_gameState.RaceTime);
             DrawStartLights();
+            MiniMap.UpdateCar(_car.X, _car.Y, _car.Angle);
             // toon het huidige lap en het max aantal lap
             LapText.Text = $"Lap {Math.Min(_lapTracker.LapCount, _lapTracker.LapMax)} / {_lapTracker.LapMax}";
 
@@ -456,6 +468,7 @@ namespace ByteRacer.Views
         private static string FormatTime(double seconds)
             => TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\.ff");
 
+
         private void DrawDebug()
         {
             double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
@@ -463,7 +476,7 @@ namespace ByteRacer.Views
                              $"{kmh:0} km/h\n" +
                              $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
                              $"volume  {GetVolume():0}\n" + $"{_playerName}"
-            ;
+                ;
         }
 
         #endregion
