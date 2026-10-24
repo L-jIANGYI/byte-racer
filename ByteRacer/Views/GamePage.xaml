@@ -48,7 +48,7 @@ Data="M 1750,300
     StrokeEndLineCap="Round"/>
 
                 <!-- Asfalt -->
-                <Path
+                <Path x:Name="TrackPath"
    Data="M 1750,300
     C 2200,0 3250,300 2650,800
     C 2650,800 2800,2000 2350,1100
@@ -101,7 +101,7 @@ Data="M 1750,300
                 </Rectangle>
 
                 <!-- Auto: in World Canvas, met World bewegen -->
-                <Grid x:Name="CarVisual" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
+                <Grid x:Name="CarVisual" Panel.ZIndex="2" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <RotateTransform x:Name="CarRotation"></RotateTransform>
                     </Grid.RenderTransform>
