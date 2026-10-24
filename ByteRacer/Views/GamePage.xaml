@@ -53,7 +53,9 @@
     StrokeStartLineCap="Round"
     StrokeEndLineCap="Round"/>
 
+                <!-- start/finishlijn -->
                 <Rectangle
+                    x:Name="StartFinishLine"
                     Width="160"
                     Height="24"
                     Canvas.Left="1905"
@@ -70,7 +72,6 @@
                             TileMode="Tile"
                             Viewport="0,0,20,12"
                             ViewportUnits="Absolute">
-
                             <DrawingBrush.Drawing>
                                 <DrawingGroup>
                                     <GeometryDrawing Brush="White">

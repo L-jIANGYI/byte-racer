@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media;
+using System.Windows;
 
 namespace ByteRacer.Game
 {
@@ -17,6 +18,20 @@ namespace ByteRacer.Game
             );
         public const double EdgeWidth = 190;
         public const double RoadWidth = 160;
+
+        // Maximale afstand waarop een checkpoint wordt geactiveerd.
+        public const double CheckpointRadius = 165;
+
+        // Checkpoints in de volgorde van de race.
+        public static IReadOnlyList<Point> Checkpoints { get; } =
+            new List<Point>
+            {
+                new Point(2300, 220),
+                new Point(2700, 650),
+                new Point(2650, 1200),
+                new Point(1400, 1200),
+                new Point(900, 500)
+            };
     }
 }
 
