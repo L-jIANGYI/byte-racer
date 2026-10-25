@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace ByteRacer.Views
@@ -43,13 +44,15 @@ namespace ByteRacer.Views
         private readonly PlayerInput _input = new PlayerInput();
         private readonly Car _car = new Car();
         private readonly GameState _gameState = new GameState();
+
         private readonly LapTracker _lapTracker = new LapTracker();
         private readonly List<Ellipse> _checkpointMarkers = new List<Ellipse>();
         private readonly List<TextBlock> _checkpointLabels = new List<TextBlock>();
         private const double CheckpointVisualRadius = 165;
 
-        #endregion
+        private readonly List<QuizBlock> _blocks = new List<QuizBlock>();
 
+        #endregion
         public GamePage(MainWindow main, string playerName = "")
         {
             InitializeComponent();
@@ -67,6 +70,7 @@ namespace ByteRacer.Views
             PauseMenu.VolumeChanged += SetVolume;
 
             Quiz.AnswerChecked += OnQuizAnswered;
+            CreateBlocks();
         }
 
         #region ------------------------- Start / Stop -------------------------
@@ -217,10 +221,13 @@ namespace ByteRacer.Views
             {
                 case RaceState.Racing:
                     {
-
                         _car.Update(dt, _input.Read(), onTrack: true);
                         KeepCarInWorld();
 
+                        // Quizblokken bijwerken en botsingen controleren.
+                        UpdateBlocks(dt);
+
+                        // Controleren of de auto de start-/finishlijn bereikt.
                         bool isAtStartFinishLine = IsCarAtStartFinishLine();
 
                         if (_lapTracker.Update(
@@ -233,18 +240,22 @@ namespace ByteRacer.Views
 
                         break;
                     }
-                case RaceState.Finished:
-                    _car.Update(dt, CarInput.None, onTrack: true);
-                    KeepCarInWorld();
-                    if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
-                    {
-                        StopLoop();
-                        SaveResultAndShowLeaderboard();
-                        return;
-                    }
 
-                    break;
-        }
+                case RaceState.Finished:
+                    {
+                        _car.Update(dt, CarInput.None, onTrack: true);
+                        KeepCarInWorld();
+
+                        if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
+                        {
+                            StopLoop();
+                            SaveResultAndShowLeaderboard();
+                            return;
+                        }
+
+                        break;
+                    }
+            }
 
             UpdateCheckpoints();
             DrawCar();
@@ -564,6 +575,67 @@ namespace ByteRacer.Views
             _gameState.EndQuiz();
         }
 
+        /// <summary>
+        /// Zet de blocks op de baan, in sets van 3, 
+        /// en op de positions die gebaseerd zijn op hoeveel we willen in BlockSetsCount,
+        /// eerlijk verpsreid over de volledige TrackPath (de Path voor het asfalt).
+        /// </summary>
+        private void CreateBlocks()
+        {
+            var sprite = new BitmapImage(new Uri("pack://application:,,,/Assets/Images/Icons/quizblock.png"));
+            RenderOptions.SetBitmapScalingMode(sprite, BitmapScalingMode.NearestNeighbor);
+            var track = TrackPath.Data.GetFlattenedPathGeometry();
+
+            for (int set = 0; set < QuizBlock.BlockSetsCount; set++)
+            {
+                double position = (set + 0.5) / QuizBlock.BlockSetsCount;
+
+                track.GetPointAtFractionLength(position, out Point p, out Point direction);
+
+                double sideX = -direction.Y;
+                double sideY = direction.X;
+
+                for (int i = -1; i <= 1; i++)
+                {
+                    double x = p.X + sideX * i * 45;
+                    double y = p.Y + sideY * i * 45;
+
+                    var block = new QuizBlock(x, y, sprite, set);
+                    Panel.SetZIndex(block.Visual, 1);
+                    World.Children.Add(block.Visual);
+                    _blocks.Add(block);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check of we een blok rammen met onze dikke waggie, en update voortdurend de status/downtime van de blocks
+        /// </summary>
+        private void UpdateBlocks(double dt)
+        {
+            foreach (var block in _blocks) block.Update(dt);
+
+            foreach (var block in _blocks)
+            {
+                if (!block.IsActive) continue;
+
+                double dx = _car.X - block.X;
+                double dy = _car.Y - block.Y;
+                double distance = Math.Sqrt(dx * dx + dy * dy); // pythagoras heb ik oprecht al 4 jaar niet meer gebruikt, shit's crazy
+
+                if (distance > QuizBlock.HitDistance) continue;
+                if (!_gameState.CanStartQuiz) return;
+
+                foreach (var other in _blocks)
+                {
+                    if (other.Row == block.Row)
+                        other.Hit();
+                }
+
+                OpenQuiz();
+                return;
+            }
+        }
         #endregion
 
         #region ------------------------- Volume tijdelijk -------------------------

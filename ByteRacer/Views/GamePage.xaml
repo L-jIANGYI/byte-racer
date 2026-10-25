@@ -50,12 +50,13 @@
 
                 <!-- Asfalt -->
                 <Path
-    Data="{x:Static game:Track.Centerline}"
-    Stroke="#555555"
-    StrokeThickness="{x:Static game:Track.RoadWidth}"
-    StrokeLineJoin="Round"
-    StrokeStartLineCap="Round"
-    StrokeEndLineCap="Round"/>
+                    x:Name="TrackPath"
+                    Data="{x:Static game:Track.Centerline}"
+                    Stroke="#555555"
+                    StrokeThickness="{x:Static game:Track.RoadWidth}"
+                    StrokeLineJoin="Round"
+                    StrokeStartLineCap="Round"
+                    StrokeEndLineCap="Round"/>
 
                 <!-- start/finishlijn -->
                 <Rectangle
@@ -99,7 +100,7 @@
                 </Rectangle>
 
                 <!-- Auto: in World Canvas, met World bewegen -->
-                <Grid x:Name="CarVisual" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
+                <Grid x:Name="CarVisual" Panel.ZIndex="2" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <RotateTransform x:Name="CarRotation"></RotateTransform>
                     </Grid.RenderTransform>
