@@ -640,23 +640,15 @@ namespace ByteRacer.Views
 
         #region ------------------------- Volume tijdelijk -------------------------
 
-        private static double _volume = 50;
+        /// <summary>
+        /// Huidig volume 0 ~ 100.
+        /// </summary>
+        private static double GetVolume() => SoundService.MusicVolume;
 
         /// <summary>
-        /// Huidig volume, 0 ~ 100.
+        /// Volume aangepast in het pauzemenu 0 ~ 100.
         /// </summary>
-        private static double GetVolume()
-        {
-            return _volume;
-        }
-
-        /// <summary>
-        /// Volume aangepast in het pauzemenu, 0 ~ 100.
-        /// </summary>
-        private static void SetVolume(double volume)
-        {
-            _volume = Math.Clamp(volume, 0, 100);
-        }
+        private static void SetVolume(double volume) => SoundService.MusicVolume = volume;
 
         #endregion
     }
