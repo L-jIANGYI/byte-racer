@@ -2,6 +2,7 @@
 using ByteRacer.Models;
 using ByteRacer.Services;
 using System.Diagnostics;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -43,10 +44,15 @@ namespace ByteRacer.Views
         private readonly PlayerInput _input = new PlayerInput();
         private readonly Car _car = new Car();
         private readonly GameState _gameState = new GameState();
+
+        private readonly LapTracker _lapTracker = new LapTracker();
+        private readonly List<Ellipse> _checkpointMarkers = new List<Ellipse>();
+        private readonly List<TextBlock> _checkpointLabels = new List<TextBlock>();
+        private const double CheckpointVisualRadius = 165;
+
         private readonly List<QuizBlock> _blocks = new List<QuizBlock>();
 
         #endregion
-
         public GamePage(MainWindow main, string playerName = "")
         {
             InitializeComponent();
@@ -55,6 +61,8 @@ namespace ByteRacer.Views
 
             World.Width = WorldWidth;
             World.Height = WorldHeight;
+
+            InitializeCheckpoints();
 
             PauseMenu.ResumeClicked += ResumeGame;
             PauseMenu.RestartClicked += RestartGame;
@@ -74,9 +82,9 @@ namespace ByteRacer.Views
         /// <param name="e"></param>
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _car.X = 2150;
-            _car.Y = 175;
-            _car.Angle = 175;
+            _car.X = 1975;
+            _car.Y = 204;
+            _car.Angle = 0;
             _car.Speed = 0;
 
             MiniMap.Setup(TestTrack, 160);
@@ -192,9 +200,12 @@ namespace ByteRacer.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// 
+
+
         private void OnFrame(object? sender, EventArgs e)
         {
-            // Niet 2x aangeroepen per frame
+            // Voorkom dubbele updates in hetzelfde frame
             TimeSpan renderingTime = ((RenderingEventArgs)e).RenderingTime;
             if (renderingTime == _lastRenderingTime) return;
             _lastRenderingTime = renderingTime;
@@ -203,36 +214,85 @@ namespace ByteRacer.Views
             TimeSpan now = _clock.Elapsed;
             double dt = (now - _lastFrameTime).TotalSeconds;
             _lastFrameTime = now;
-            if (dt > 0.05) dt = 0.05; // Niet flash wanneer lang vast zit.
 
             _gameState.Update(dt);
 
             switch (_gameState.State)
             {
                 case RaceState.Racing:
-                    _car.Update(dt, _input.Read(), onTrack: true);
-                    KeepCarInWorld();
-                    UpdateBlocks(dt);
-                    break;
-
-                case RaceState.Finished:
-                    _car.Update(dt, CarInput.None, onTrack: true);
-                    KeepCarInWorld();
-                    if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
                     {
-                        StopLoop();
-                        SaveResultAndShowLeaderboard();
-                        return;
+                        _car.Update(dt, _input.Read(), onTrack: true);
+                        KeepCarInWorld();
+
+                        // Quizblokken bijwerken en botsingen controleren.
+                        UpdateBlocks(dt);
+
+                        // Controleren of de auto de start-/finishlijn bereikt.
+                        bool isAtStartFinishLine = IsCarAtStartFinishLine();
+
+                        if (_lapTracker.Update(
+                                _car.X,
+                                _car.Y,
+                                isAtStartFinishLine))
+                        {
+                            _gameState.Finish();
+                        }
+
+                        break;
                     }
 
-                    break;
+                case RaceState.Finished:
+                    {
+                        _car.Update(dt, CarInput.None, onTrack: true);
+                        KeepCarInWorld();
+
+                        if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
+                        {
+                            StopLoop();
+                            SaveResultAndShowLeaderboard();
+                            return;
+                        }
+
+                        break;
+                    }
             }
 
+            UpdateCheckpoints();
             DrawCar();
             UpdateCamera(dt);
             DrawHud();
             DrawDebug();
         }
+
+
+        /// <summary>
+        /// Controleert of de auto zich binnen het gebied van de start-/finishlijn bevindt.
+        /// Zet de positie van de auto om naar de coördinaten van de start-/finishlijn
+        /// en controleert of deze binnen de breedte en hoogte van de lijn valt.
+        /// Geeft false terug als de start-/finishlijn niet geladen is of de transformatie mislukt.
+        /// </summary>
+        private bool IsCarAtStartFinishLine()
+        {
+            if (!StartFinishLine.IsLoaded)
+                return false;
+
+            GeneralTransform lineToWorld =
+                StartFinishLine.TransformToAncestor(World);
+
+            GeneralTransform worldToLine = lineToWorld.Inverse;
+
+            if (worldToLine == null)
+                return false;
+
+            Point carPosition = worldToLine.Transform(
+                new Point(_car.X, _car.Y));
+
+            return carPosition.X >= 0 &&
+                   carPosition.X <= StartFinishLine.ActualWidth &&
+                   carPosition.Y >= 0 &&
+                   carPosition.Y <= StartFinishLine.ActualHeight;
+        }
+
 
         /// <summary>
         /// Houd de auto in het wereld.
@@ -257,6 +317,78 @@ namespace ByteRacer.Views
             Canvas.SetLeft(CarVisual, _car.X - CarVisual.Width / 2);
             Canvas.SetTop(CarVisual, _car.Y - CarVisual.Height / 2);
             CarRotation.Angle = _car.Angle;
+        }
+
+        /// <summary>
+        /// Maakt voor elk checkpoint een zichtbare cirkel. Dit gebeurt één keer.
+        /// Geel = nog te bereiken; groen = al bereikt.
+        /// </summary>
+        private void InitializeCheckpoints()
+        {
+            _checkpointMarkers.Clear();
+            _checkpointLabels.Clear();
+
+            for (int i = 0; i < Track.Checkpoints.Count; i++)
+            {
+                var checkpoint = Track.Checkpoints[i];
+
+                // Cirkel toont de zone waar de auto het checkpoint kan halen.
+                var marker = new Ellipse
+                {
+                    Width = CheckpointVisualRadius * 2,
+                    Height = CheckpointVisualRadius * 2,
+                    StrokeThickness = 5,
+                    Stroke = Brushes.Yellow,
+                    Fill = new SolidColorBrush(Color.FromArgb(45, 255, 255, 0)),
+                    IsHitTestVisible = false
+                };
+
+                Canvas.SetLeft(marker, checkpoint.X - marker.Width / 2);
+                Canvas.SetTop(marker, checkpoint.Y - marker.Height / 2);
+                World.Children.Add(marker);
+                _checkpointMarkers.Add(marker);
+
+                // Nummer in het midden zodat de volgorde duidelijk is.
+                var label = new TextBlock
+                {
+                    Text = $"CHECKPOINT {i + 1}",
+                    Foreground = Brushes.Black,
+                    Background = Brushes.Yellow,
+                    FontSize = 16,
+                    FontWeight = FontWeights.Bold,
+                    Padding = new Thickness(5, 3, 5, 3),
+                    IsHitTestVisible = false
+                };
+
+                Canvas.SetLeft(label, checkpoint.X - 55);
+                Canvas.SetTop(label, checkpoint.Y - 13);
+                World.Children.Add(label);
+                _checkpointLabels.Add(label);
+            }
+        }
+
+        /// <summary>
+        /// Werkt de kleur van de checkpoints bij op basis van de voortgang.
+        /// </summary>
+        private void UpdateCheckpoints()
+        {
+            for (int i = 0; i < _checkpointMarkers.Count; i++)
+            {
+                bool passed = i < _lapTracker.NextCheckpoint;
+                _checkpointMarkers[i].Stroke = passed
+                    ? Brushes.LimeGreen
+                    : Brushes.Yellow;
+                _checkpointMarkers[i].Fill = passed
+                    ? new SolidColorBrush(Color.FromArgb(45, 0, 255, 0))
+                    : new SolidColorBrush(Color.FromArgb(45, 255, 255, 0));
+
+                _checkpointLabels[i].Text = passed
+                    ? $"CHECKPOINT {i + 1} ✓"
+                    : $"CHECKPOINT {i + 1}";
+                _checkpointLabels[i].Background = passed
+                    ? Brushes.LimeGreen
+                    : Brushes.Yellow;
+            }
         }
 
         /// <summary>
@@ -296,6 +428,8 @@ namespace ByteRacer.Views
             RaceTimeText.Text = FormatTime(_gameState.RaceTime);
             DrawStartLights();
             MiniMap.UpdateCar(_car.X, _car.Y, _car.Angle);
+            // toon het huidige lap en het max aantal lap
+            LapText.Text = $"Lap {Math.Min(_lapTracker.LapCount, _lapTracker.LapMax)} / {_lapTracker.LapMax}";
 
             switch (_gameState.State)
             {
