@@ -434,12 +434,12 @@ namespace ByteRacer.Views
         #region ------------------------- Volume tijdelijk -------------------------
 
         /// <summary>
-        /// Huidig volume, 0 ~ 100.
+        /// Huidig volume 0 ~ 100.
         /// </summary>
         private static double GetVolume() => SoundService.MusicVolume;
 
         /// <summary>
-        /// Volume aangepast in het pauzemenu, 0 ~ 100.
+        /// Volume aangepast in het pauzemenu 0 ~ 100.
         /// </summary>
         private static void SetVolume(double volume) => SoundService.MusicVolume = volume;
 
