@@ -244,7 +244,6 @@ namespace ByteRacer.Views
                     }
 
                     break;
-            }
         }
 
             UpdateCheckpoints();
@@ -423,10 +422,6 @@ namespace ByteRacer.Views
 
             switch (_gameState.State)
             {
-                case RaceState.Quiz:
-                    CenterText.Text = "Quiz\n J = ✔ K = ❌";
-                    CenterText.Visibility = Visibility.Visible;
-                    break;
                 case RaceState.Finished:
                     CenterText.Text = $"FINISH\n{FormatTime(_gameState.RaceTime)}";
                     CenterText.Visibility = Visibility.Visible;
@@ -465,6 +460,20 @@ namespace ByteRacer.Views
         private static string FormatTime(double seconds)
             => TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss\.ff");
 
+        /// <summary>
+        /// Het resultaat opslaan en naar de leaderboard
+        /// </summary>
+        private void SaveResultAndShowLeaderboard()
+        {
+            var result = new PlayResult
+            {
+                Name = _playerName,
+                RaceTime = _gameState.RaceTime
+            };
+
+            LeaderboardService.Add(result);
+            _main.ShowLeaderboard(result);
+        }
 
         private void DrawDebug()
         {
