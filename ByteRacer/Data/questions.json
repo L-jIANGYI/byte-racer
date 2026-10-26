@@ -108,25 +108,5 @@
     "question": "Welke waarde geeft aan dat iets niet waar is?",
     "answers": [ "False", "None", "0.5" ],
     "correctAnswer": 0
-  },
-  {
-    "question": "Waarvoor wordt een variabele gebruikt?",
-    "answers": [ "Om gegevens op te slaan", "Om een computer uit te zetten", "Om code automatisch te verwijderen" ],
-    "correctAnswer": 0
-  },
-  {
-    "question": "Wat is een boolean?",
-    "answers": [ "Een getal met decimalen", "Een waarde die waar of onwaar is", "Een stuk tekst" ],
-    "correctAnswer": 1
-  },
-  {
-    "question": "Wat is een loop?",
-    "answers": [ "Een manier om code te herhalen", "Een soort variabele", "Een fout in een programma" ],
-    "correctAnswer": 0
-  },
-  {
-    "question": "Wat is een bug in een programma?",
-    "answers": [ "Een programmeertaal", "Een fout in de werking van het programma", "Een functie die code herhaalt" ],
-    "correctAnswer": 1
   }
 ]
