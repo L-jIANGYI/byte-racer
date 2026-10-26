@@ -52,7 +52,12 @@ namespace ByteRacer.Views
 
         // ---------- Ghost ----------
         private readonly GhostRecorder _recorder = new GhostRecorder();
+
         private readonly GhostPlayer? _ghostPlayer;
+
+        // ---------- Geluid ----------
+        private int _lastLightsOn; // vorige frame: hoeveel lichten aan
+        private RaceState _lastState = RaceState.Countdown;
 
         #endregion
 
@@ -191,6 +196,7 @@ namespace ByteRacer.Views
             _lastFrameTime = now;
 
             _gameState.Update(dt);
+            PlayStartSounds();
 
             switch (_gameState.State)
             {
@@ -464,6 +470,29 @@ namespace ByteRacer.Views
                 var light = (Ellipse)StartLightsPanel.Children[i];
                 light.Fill = i < lightsOn ? LightOnColor : LightOffColor;
             }
+        }
+
+        /// <summary>
+        /// 'countdown.wav' bij elk startlicht en 'go' als de lichten uitgaan.
+        /// </summary>
+        private void PlayStartSounds()
+        {
+            RaceState state = _gameState.State;
+
+            // Alleen tijdens de countdown bijhouden: in pauze is LightsOn 0,
+            // anders zou na 'Doorgaan' hetzelfde licht nog een keer piepen.
+            if (state == RaceState.Countdown)
+            {
+                int lightsOn = _gameState.LightsOn;
+                if (lightsOn > _lastLightsOn) SoundService.PlayEffect("countdown.wav");
+                _lastLightsOn = lightsOn;
+            }
+
+            // Countdown → Racing = lichten uit
+            if (_lastState == RaceState.Countdown && state == RaceState.Racing)
+                SoundService.PlayEffect("go.wav");
+
+            _lastState = state;
         }
 
         /// <summary>
