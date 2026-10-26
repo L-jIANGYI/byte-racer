@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace ByteRacer.Game
 {
-    class Track
+    public static class Track
     {
         public static Geometry Centerline { get; } =
             Geometry.Parse(
@@ -20,16 +20,16 @@ namespace ByteRacer.Game
         public const double RoadWidth = 160;
 
         // Maximale afstand waarop een checkpoint wordt geactiveerd.
-        public const double CheckpointRadius = 165;
+        public const double CheckpointRadius = 100;
 
         // Checkpoints in de volgorde van de race.
         public static IReadOnlyList<Point> Checkpoints { get; } =
             new List<Point>
             {
-                new Point(2300, 220),
-                new Point(2700, 650),
-                new Point(2650, 1200),
-                new Point(1400, 1200),
+                new Point(2500, 220),
+                new Point(2650, 800),
+                new Point(2675, 1250),
+                new Point(1350, 1200),
                 new Point(900, 500)
             };
     }

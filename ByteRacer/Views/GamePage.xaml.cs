@@ -48,10 +48,13 @@ namespace ByteRacer.Views
         private readonly LapTracker _lapTracker = new LapTracker();
         private readonly List<Ellipse> _checkpointMarkers = new List<Ellipse>();
         private readonly List<TextBlock> _checkpointLabels = new List<TextBlock>();
-        private const double CheckpointVisualRadius = 165;
+        private const double CheckpointVisualRadius = Track.CheckpointRadius;
 
         private readonly List<QuizBlock> _blocks = new List<QuizBlock>();
 
+        // ---------- Ghost ----------
+        private readonly GhostRecorder _recorder = new GhostRecorder();
+        private readonly GhostPlayer? _ghostPlayer;
         #endregion
         public GamePage(MainWindow main, string playerName = "")
         {
@@ -71,6 +74,9 @@ namespace ByteRacer.Views
 
             Quiz.AnswerChecked += OnQuizAnswered;
             CreateBlocks();
+
+            GhostData? ghost = GhostService.LoadBest();
+            _ghostPlayer = ghost == null ? null : new GhostPlayer(ghost.Samples);
         }
 
         #region ------------------------- Start / Stop -------------------------
@@ -230,10 +236,15 @@ namespace ByteRacer.Views
                         // Controleren of de auto de start-/finishlijn bereikt.
                         bool isAtStartFinishLine = IsCarAtStartFinishLine();
 
-                        if (_lapTracker.Update(
-                                _car.X,
-                                _car.Y,
-                                isAtStartFinishLine))
+                        bool raceFinished = _lapTracker.Update(
+                            _car.X,
+                            _car.Y,
+                            isAtStartFinishLine);
+
+                        // Record every racing frame, including the final position.
+                        _recorder.Record(_gameState.RaceTime, _car, force: raceFinished);
+
+                        if (raceFinished)
                         {
                             _gameState.Finish();
                         }
@@ -259,9 +270,10 @@ namespace ByteRacer.Views
 
             UpdateCheckpoints();
             DrawCar();
+            DrawGhost();
             UpdateCamera(dt);
             DrawHud();
-            DrawDebug();
+            //DrawDebug();
         }
 
 
@@ -317,6 +329,25 @@ namespace ByteRacer.Views
             Canvas.SetLeft(CarVisual, _car.X - CarVisual.Width / 2);
             Canvas.SetTop(CarVisual, _car.Y - CarVisual.Height / 2);
             CarRotation.Angle = _car.Angle;
+        }
+
+        /// <summary>
+        /// Tekent de ghost op de plek waar de #1 op dit moment van de race was.
+        /// </summary>
+        private void DrawGhost()
+        {
+            if (_ghostPlayer == null ||
+                _gameState.State == RaceState.Finished ||
+                !_ghostPlayer.TryGetPose(_gameState.RaceTime, out double x, out double y, out double angle))
+            {
+                GhostVisual.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            Canvas.SetLeft(GhostVisual, x - GhostVisual.Width / 2);
+            Canvas.SetTop(GhostVisual, y - GhostVisual.Height / 2);
+            GhostRotation.Angle = angle;
+            GhostVisual.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -483,18 +514,30 @@ namespace ByteRacer.Views
             };
 
             LeaderboardService.Add(result);
+
+            // nieuwe #1: deze run wordt de ghost
+            if (LeaderboardService.GetRank(result) == 1)
+            {
+                GhostService.Save(new GhostData
+                {
+                    Name = result.Name,
+                    RaceTime = result.RaceTime,
+                    Samples = _recorder.Samples
+                });
+            }
+
             _main.ShowLeaderboard(result);
         }
 
-        private void DrawDebug()
-        {
-            double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
-            DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
-                             $"{kmh:0} km/h\n" +
-                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
-                             $"volume  {GetVolume():0}\n" + $"{_playerName}"
-                ;
-        }
+        //private void DrawDebug()
+        //{
+        //    double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
+        //    DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
+        //                     $"{kmh:0} km/h\n" +
+        //                     $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
+        //                     $"volume  {GetVolume():0}\n" + $"{_playerName}"
+        //        ;
+        //}
 
         #endregion
 
@@ -640,23 +683,15 @@ namespace ByteRacer.Views
 
         #region ------------------------- Volume tijdelijk -------------------------
 
-        private static double _volume = 50;
+        /// <summary>
+        /// Huidig volume 0 ~ 100.
+        /// </summary>
+        private static double GetVolume() => SoundService.MusicVolume;
 
         /// <summary>
-        /// Huidig volume, 0 ~ 100.
+        /// Volume aangepast in het pauzemenu 0 ~ 100.
         /// </summary>
-        private static double GetVolume()
-        {
-            return _volume;
-        }
-
-        /// <summary>
-        /// Volume aangepast in het pauzemenu, 0 ~ 100.
-        /// </summary>
-        private static void SetVolume(double volume)
-        {
-            _volume = Math.Clamp(volume, 0, 100);
-        }
+        private static void SetVolume(double volume) => SoundService.MusicVolume = volume;
 
         #endregion
     }

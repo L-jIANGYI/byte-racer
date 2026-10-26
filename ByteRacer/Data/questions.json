@@ -20,32 +20,27 @@
     "correctAnswer": 0
   },
   {
-    "question": "Hoe maak je een variabele met de naam 'leeftijd' en de waarde 18?",
-    "answers": [ "leeftijd == 18", "leeftijd = 18", "int leeftijd = 18" ],
-    "correctAnswer": 1
+    "question": "? * 3 = 54",
+    "answers": [ "18", "12", "14" ],
+    "correctAnswer": 0
   },
   {
-    "question": "Welke operator gebruik je om twee waarden met elkaar te vermenigvuldigen?",
+    "question": "3 ? 3 = 9",
     "answers": [ "+", "*", "/" ],
     "correctAnswer": 1
   },
   {
-    "question": "Welke operator gebruik je om te controleren of twee waarden gelijk zijn?",
+    "question": "1 ? 1",
     "answers": [ "=", "==", "!=" ],
     "correctAnswer": 1
   },
   {
-    "question": "Hoe schrijf je een commentaarregel in Python?",
-    "answers": [ "// Dit is commentaar", "# Dit is commentaar", "-- Dit is commentaar" ],
-    "correctAnswer": 1
-  },
-  {
-    "question": "Welke functie zet een getal om naar een string?",
-    "answers": [ "str()", "int()", "float()" ],
+    "question": "Hoe wordt een heel getal genoemd binnen programmeren?",
+    "answers": [ "integer", "fraction", "quantity" ],
     "correctAnswer": 0
   },
   {
-    "question": "Welke uitspraak gebruik je om een voorwaarde te controleren?",
+    "question": "Welke uitspraak gebruik je om te kijken of iets waar is?",
     "answers": [ "def", "for", "if" ],
     "correctAnswer": 2
   },
@@ -55,23 +50,18 @@
     "correctAnswer": 1
   },
   {
-    "question": "Welke operator betekent 'kleiner dan'?",
+    "question": "2 ? 13",
     "answers": [ "<", ">", "=" ],
     "correctAnswer": 0
   },
   {
-    "question": "Welke operator betekent 'niet gelijk aan'?",
-    "answers": [ "==", "!=", "<>" ],
+    "question": "32 ? 33",
+    "answers": [ "==", "!=", "=" ],
     "correctAnswer": 1
   },
   {
-    "question": "Welke 'loop' gebruik je vaak om door een lijst te lopen?",
-    "answers": [ "for", "if", "def" ],
-    "correctAnswer": 0
-  },
-  {
-    "question": "Hoeveel keer wordt deze 'loop' uitgevoerd: for i in range(4)?",
-    "answers": [ "3 keer", "4 keer", "5 keer" ],
+    "question": "Wat wordt binnen programmeren veel gezien als het eerste getal?",
+    "answers": [ "i", "0", "(1)" ],
     "correctAnswer": 1
   },
   {
@@ -85,23 +75,13 @@
     "correctAnswer": 2
   },
   {
-    "question": "Welke functie voegt een element toe aan het einde van een lijst?",
-    "answers": [ "add()", "insert_end()", "append()" ],
-    "correctAnswer": 2
-  },
-  {
     "question": "Hoe krijg je het eerste element van de lijst getallen = [10, 20, 30]?",
     "answers": [ "getallen[1]", "getallen[0]", "getallen.first()" ],
     "correctAnswer": 1
   },
   {
-    "question": "Welke operator gebruik je voor machten?",
+    "question": "Hoe bereken je machten in code?",
     "answers": [ "^", "**", "^^" ],
-    "correctAnswer": 1
-  },
-  {
-    "question": "Hoe maak je een eigen functie in Python?",
-    "answers": [ "function mijnFunctie():", "def mijnFunctie():", "create mijnFunctie():" ],
     "correctAnswer": 1
   },
   {
@@ -110,18 +90,23 @@
     "correctAnswer": 0
   },
   {
-    "question": "Wat is de console output van print(2 == 2)?",
+    "question": "Wat geeft (2 == 2)?",
     "answers": [ "2", "False", "True" ],
     "correctAnswer": 2
   },
   {
-    "question": "Welke methode maakt een string volledig in hoofdletters?",
-    "answers": [ "uppercase()", "upper()", "capital()" ],
-    "correctAnswer": 1
+    "question": "Hoe noem je een stukje tekst, is binnen het programmeren?",
+    "answers": [ "string", "integer", "boolean" ],
+    "correctAnswer": 0
   },
   {
-    "question": "Welke uitspraak gebruik je om extra voorwaarden te controleren na een if?",
-    "answers": [ "elseif", "elif", "otherwise" ],
-    "correctAnswer": 1
+    "question": "(2 + 3 * 2) = ?",
+    "answers": [ "10", "12", "8" ],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Welke waarde geeft aan dat iets niet waar is?",
+    "answers": [ "False", "None", "0.5" ],
+    "correctAnswer": 0
   }
 ]

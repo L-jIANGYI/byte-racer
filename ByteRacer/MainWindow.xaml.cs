@@ -55,5 +55,20 @@ namespace ByteRacer
             Left = area.Left + (area.Width - Width) / 2;
             Top = area.Top + (area.Height - Height) / 2;
         }
+
+        private const double DesignWidth = 800;
+        private const double DesignHeight = 450;
+
+        private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Width <= 0 || e.NewSize.Height <= 0) return;
+
+            double scale = Math.Min(e.NewSize.Width / DesignWidth, e.NewSize.Height / DesignHeight);
+            PageScale.ScaleX = scale;
+            PageScale.ScaleY = scale;
+
+            PageHost.Width = e.NewSize.Width / scale;
+            PageHost.Height = e.NewSize.Height / scale;
+        }
     }
 }
