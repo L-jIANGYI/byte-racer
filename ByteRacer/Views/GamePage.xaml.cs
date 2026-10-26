@@ -209,6 +209,9 @@ namespace ByteRacer.Views
                     // Quizblokken bijwerken en botsingen controleren.
                     UpdateBlocks(dt);
 
+                    int checkpointBefore = _lapTracker.NextCheckpoint;
+                    int lapBefore = _lapTracker.LapCount;
+
                     // Controleren of de auto de start-/finishlijn bereikt.
                     bool isAtStartFinishLine = IsCarAtStartFinishLine();
 
@@ -222,7 +225,16 @@ namespace ByteRacer.Views
 
                     if (raceFinished)
                     {
+                        SoundService.PlayEffect("finish.wav");
                         _gameState.Finish();
+                    }
+                    else if (_lapTracker.LapCount > lapBefore)
+                    {
+                        SoundService.PlayEffect("lap.wav");
+                    }
+                    else if (_lapTracker.NextCheckpoint > checkpointBefore)
+                    {
+                        SoundService.PlayEffect("checkpoint.wav");
                     }
 
                     break;
