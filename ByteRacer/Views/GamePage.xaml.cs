@@ -274,7 +274,7 @@ namespace ByteRacer.Views
             DrawGhost();
             UpdateCamera(dt);
             DrawHud();
-            DrawDebug();
+            //DrawDebug();
         }
 
 
@@ -531,15 +531,15 @@ namespace ByteRacer.Views
             _main.ShowLeaderboard(result);
         }
 
-        private void DrawDebug()
-        {
-            double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
-            DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
-                             $"{kmh:0} km/h\n" +
-                             $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
-                             $"volume  {GetVolume():0}\n" + $"{_playerName}"
-                ;
-        }
+        //private void DrawDebug()
+        //{
+        //    double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
+        //    DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
+        //                     $"{kmh:0} km/h\n" +
+        //                     $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
+        //                     $"volume  {GetVolume():0}\n" + $"{_playerName}"
+        //        ;
+        //}
 
         #endregion
 
