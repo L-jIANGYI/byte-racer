@@ -19,7 +19,7 @@
         public bool HasEffect => EffectTimeLeft > 0;
 
         // ---------- Parameters ----------
-        public double MaxSpeed { get; set; } = 450;
+        public double MaxSpeed { get; set; } = 350;
         public double MaxReverse { get; set; } = 120;
         public double Acceleration { get; set; } = 250;
         public double BrakePower { get; set; } = 500;

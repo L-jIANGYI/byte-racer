@@ -17,11 +17,6 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class GamePage : UserControl
     {
-        // even testen voor minimap
-        private static readonly Geometry TestTrack = Geometry.Parse(
-            "M 1750,300 C 2200,0 3250,300 2650,800 C 2650,800 2800,2000 2350,1100 " +
-            "C 1525,1400 1000,1100 1000,1100 C 625,275 1150,50 1750,300 Z");
-
         #region ---------------------- Properties -------------------------
 
         private readonly MainWindow _main;
@@ -52,10 +47,15 @@ namespace ByteRacer.Views
 
         private readonly List<QuizBlock> _blocks = new List<QuizBlock>();
 
+        private static readonly Geometry RoadArea =
+            Track.Centerline.GetWidenedPathGeometry(new Pen(Brushes.Black, Track.RoadWidth));
+
         // ---------- Ghost ----------
         private readonly GhostRecorder _recorder = new GhostRecorder();
         private readonly GhostPlayer? _ghostPlayer;
+
         #endregion
+
         public GamePage(MainWindow main, string playerName = "")
         {
             InitializeComponent();
@@ -93,7 +93,7 @@ namespace ByteRacer.Views
             _car.Angle = 0;
             _car.Speed = 0;
 
-            MiniMap.Setup(TestTrack, 160);
+            MiniMap.Setup(Track.Centerline, Track.RoadWidth);
 
             UpdateCamera(0, true);
 
@@ -207,8 +207,6 @@ namespace ByteRacer.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// 
-
-
         private void OnFrame(object? sender, EventArgs e)
         {
             // Voorkom dubbele updates in hetzelfde frame
@@ -226,46 +224,47 @@ namespace ByteRacer.Views
             switch (_gameState.State)
             {
                 case RaceState.Racing:
+                {
+                    bool onTrack = RoadArea.FillContains(new Point(_car.X, _car.Y));
+                    _car.Update(dt, _input.Read(), onTrack);
+                    KeepCarInWorld();
+
+                    // Quizblokken bijwerken en botsingen controleren.
+                    UpdateBlocks(dt);
+
+                    // Controleren of de auto de start-/finishlijn bereikt.
+                    bool isAtStartFinishLine = IsCarAtStartFinishLine();
+
+                    bool raceFinished = _lapTracker.Update(
+                        _car.X,
+                        _car.Y,
+                        isAtStartFinishLine);
+
+                    // Record every racing frame, including the final position.
+                    _recorder.Record(_gameState.RaceTime, _car, force: raceFinished);
+
+                    if (raceFinished)
                     {
-                        _car.Update(dt, _input.Read(), onTrack: true);
-                        KeepCarInWorld();
-
-                        // Quizblokken bijwerken en botsingen controleren.
-                        UpdateBlocks(dt);
-
-                        // Controleren of de auto de start-/finishlijn bereikt.
-                        bool isAtStartFinishLine = IsCarAtStartFinishLine();
-
-                        bool raceFinished = _lapTracker.Update(
-                            _car.X,
-                            _car.Y,
-                            isAtStartFinishLine);
-
-                        // Record every racing frame, including the final position.
-                        _recorder.Record(_gameState.RaceTime, _car, force: raceFinished);
-
-                        if (raceFinished)
-                        {
-                            _gameState.Finish();
-                        }
-
-                        break;
+                        _gameState.Finish();
                     }
+
+                    break;
+                }
 
                 case RaceState.Finished:
+                {
+                    _car.Update(dt, CarInput.None, onTrack: true);
+                    KeepCarInWorld();
+
+                    if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
                     {
-                        _car.Update(dt, CarInput.None, onTrack: true);
-                        KeepCarInWorld();
-
-                        if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
-                        {
-                            StopLoop();
-                            SaveResultAndShowLeaderboard();
-                            return;
-                        }
-
-                        break;
+                        StopLoop();
+                        SaveResultAndShowLeaderboard();
+                        return;
                     }
+
+                    break;
+                }
             }
 
             UpdateCheckpoints();
@@ -273,7 +272,6 @@ namespace ByteRacer.Views
             DrawGhost();
             UpdateCamera(dt);
             DrawHud();
-            //DrawDebug();
         }
 
 
@@ -529,16 +527,6 @@ namespace ByteRacer.Views
             _main.ShowLeaderboard(result);
         }
 
-        //private void DrawDebug()
-        //{
-        //    double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
-        //    DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
-        //                     $"{kmh:0} km/h\n" +
-        //                     $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
-        //                     $"volume  {GetVolume():0}\n" + $"{_playerName}"
-        //        ;
-        //}
-
         #endregion
 
         #region ------------------------- Pauze -------------------------
@@ -614,7 +602,6 @@ namespace ByteRacer.Views
             double multiplier = correct ? GameSettings.QuizBoost : GameSettings.QuizPenalty;
             _car.ApplyEffect(multiplier, GameSettings.QuizEffectSeconds);
 
-            _input.Clear();
             _gameState.EndQuiz();
         }
 
@@ -664,7 +651,9 @@ namespace ByteRacer.Views
 
                 double dx = _car.X - block.X;
                 double dy = _car.Y - block.Y;
-                double distance = Math.Sqrt(dx * dx + dy * dy); // pythagoras heb ik oprecht al 4 jaar niet meer gebruikt, shit's crazy
+                double
+                    distance = Math.Sqrt(dx * dx +
+                                         dy * dy); // pythagoras heb ik oprecht al 4 jaar niet meer gebruikt, shit's crazy
 
                 if (distance > QuizBlock.HitDistance) continue;
                 if (!_gameState.CanStartQuiz) return;
@@ -679,6 +668,7 @@ namespace ByteRacer.Views
                 return;
             }
         }
+
         #endregion
 
         #region ------------------------- Volume tijdelijk -------------------------
