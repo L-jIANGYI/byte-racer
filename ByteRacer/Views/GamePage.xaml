@@ -98,7 +98,16 @@
                         </DrawingBrush>
                     </Rectangle.Fill>
                 </Rectangle>
-
+                <!-- Ghost: de run van de #1 -->
+                <Grid x:Name="GhostVisual" Panel.ZIndex="1" Width="64" Height="32"
+                  RenderTransformOrigin="0.5,0.5" Opacity="0.45"
+                  Visibility="Collapsed" IsHitTestVisible="False">
+                                <Grid.RenderTransform>
+                                    <RotateTransform x:Name="GhostRotation"/>
+                                </Grid.RenderTransform>
+                                <Image Source="pack://application:,,,/Assets/Images/carsprite.png"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                </Grid>
                 <!-- Auto: in World Canvas, met World bewegen -->
                 <Grid x:Name="CarVisual" Panel.ZIndex="2" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
