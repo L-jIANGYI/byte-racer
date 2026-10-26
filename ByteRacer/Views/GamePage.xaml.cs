@@ -104,6 +104,8 @@ namespace ByteRacer.Views
             _clock.Start();
             _lastFrameTime = _clock.Elapsed;
             CompositionTarget.Rendering += OnFrame;
+
+            SoundService.StartEngine("engine.wav");
         }
 
         /// <summary>
@@ -228,6 +230,7 @@ namespace ByteRacer.Views
                     if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
                     {
                         StopLoop();
+                        SoundService.StopEngine();
                         SaveResultAndShowLeaderboard();
                         return;
                     }
@@ -241,6 +244,8 @@ namespace ByteRacer.Views
             DrawGhost();
             UpdateCamera(dt);
             DrawHud();
+
+            SoundService.UpdateEngine(Math.Abs(_car.Speed) / _car.MaxSpeed);
         }
 
 
@@ -509,6 +514,7 @@ namespace ByteRacer.Views
 
             _gameState.Pause();
             _input.Clear();
+            SoundService.PauseEngine();
             PauseMenu.Show(GetVolume());
         }
 
@@ -522,6 +528,7 @@ namespace ByteRacer.Views
             _input.Clear();
             _gameState.Resume();
             PauseMenu.Hide();
+            SoundService.ResumeEngine();
         }
 
         /// <summary>
@@ -541,7 +548,11 @@ namespace ByteRacer.Views
         /// <summary>
         /// Terug naar start
         /// </summary>
-        private void ExitToStart() => _main.ShowStart();
+        private void ExitToStart()
+        {
+            SoundService.StopEngine();
+            _main.ShowStart();
+        }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e) => TogglePause();
 
@@ -557,6 +568,7 @@ namespace ByteRacer.Views
             if (!_gameState.CanStartQuiz) return;
             _gameState.StartQuiz();
             _input.Clear();
+            SoundService.PauseEngine();
             Quiz.Show();
         }
 
@@ -572,6 +584,7 @@ namespace ByteRacer.Views
             _car.ApplyEffect(multiplier, GameSettings.QuizEffectSeconds);
 
             _gameState.EndQuiz();
+            SoundService.ResumeEngine();
         }
 
         /// <summary>

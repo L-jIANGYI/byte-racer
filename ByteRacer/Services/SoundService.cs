@@ -46,7 +46,7 @@ namespace ByteRacer.Services
                 player.Play();
             };
 
-            _music.MediaFailed += (s, e) =>
+            player.MediaFailed += (s, e) =>
                 System.Diagnostics.Debug.WriteLine("Music failed: " + e.ErrorException?.Message);
         }
 
@@ -133,7 +133,6 @@ namespace ByteRacer.Services
         {
             _engineLevel = Math.Clamp(level, 0, 1);
             ApplyEngineVolume();
-            _engine.SpeedRatio = 0.8 + 0.6 * _engineLevel;
         }
 
         public static void PauseEngine() => _engine.Pause();
