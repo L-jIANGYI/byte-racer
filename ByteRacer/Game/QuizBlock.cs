@@ -14,7 +14,7 @@ namespace ByteRacer.Game
         /// </summary>
         public const int Size = 32; // Hoe groot moeten de blocks zijn
         public const double HitDistance = 44; // Afstand tussen car en block om OpenQuiz te triggeren
-        public const int BlockSetsCount = 5; // Hoeveel sets van 3 blocks moeten er over de track verspreid zijn
+        public const int BlockSetsCount = 4; // Hoeveel sets van 3 blocks moeten er over de track verspreid zijn
 
         /// <summary>
         /// Zet wat vars klaar voor zo
