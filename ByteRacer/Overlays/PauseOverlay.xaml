@@ -74,9 +74,10 @@
             <Button Grid.Row="3" Grid.Column="0"
                     Content="Exit"     Style="{StaticResource MenuTextButton}" Click="Exit_Click"/>
 
-            <!-- Volume slider: zelfde als in SettingsOverlay -->
+            <!-- Music volume: zelfde als in SettingsOverlay -->
             <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="32,0,0,0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -101,6 +102,36 @@
                         VerticalAlignment="Center"
                         Margin="12,0,0,0"/>
             </Grid>
+
+            <!-- Effecten volume -->
+            <Grid Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="32,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Viewbox Grid.Column="0" Width="28" Height="24">
+                    <Canvas Width="14" Height="12" RenderOptions.EdgeMode="Aliased">
+                        <Path Fill="#FFCC00"
+                              Data="F1 M5,0 H6 V9 H5 Z M6,0 H8 V1 H6 Z M7,1 H8 V4 H7 Z M2,8 H5 V9 H2 Z M1,9 H6 V11 H1 Z M2,11 H5 V12 H2 Z"/>
+                        <Path x:Name="SfxWave1" Fill="#FFCC00" Data="M9,4 H10 V8 H9 Z"/>
+                        <Path x:Name="SfxWave2" Fill="#FFCC00" Data="M11,2 H12 V10 H11 Z"/>
+                        <Path x:Name="SfxWave3" Fill="#FFCC00" Data="M13,0 H14 V12 H13 Z"/>
+                    </Canvas>
+                </Viewbox>
+
+                <Slider x:Name="SfxSlider"
+                        Grid.Column="1"
+                        Width="140"
+                        Minimum="0" Maximum="100"
+                        SmallChange="5" LargeChange="10"
+                        IsMoveToPointEnabled="True"
+                        Focusable="False"
+                        VerticalAlignment="Center"
+                        Margin="12,0,0,0"/>
+            </Grid>
+
         </Grid>
     </Grid>
 </UserControl>

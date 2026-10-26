@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ByteRacer.Services;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace ByteRacer.Overlays
@@ -16,6 +17,9 @@ namespace ByteRacer.Overlays
             InitializeComponent();
             VolumeSlider.ValueChanged += VolumeSlider_ValueChanged;
             UpdateVolumeIcon(VolumeSlider.Value);
+
+            SfxSlider.ValueChanged += SfxSlider_ValueChanged;
+            SfxSlider.PreviewMouseLeftButtonUp += (s, e) => SoundService.PlayEffect("checkpoint.wav");
         }
 
         /// <summary>
@@ -26,8 +30,10 @@ namespace ByteRacer.Overlays
         {
             _isSettingVolume = true;
             VolumeSlider.Value = volume;
+            SfxSlider.Value = SoundService.SfxVolume;
             _isSettingVolume = false;
             UpdateVolumeIcon(VolumeSlider.Value);
+            UpdateSfxIcon(SfxSlider.Value);
 
             Visibility = Visibility.Visible;
         }
@@ -58,6 +64,20 @@ namespace ByteRacer.Overlays
             Wave1.Visibility = volume > 0 ? Visibility.Visible : Visibility.Hidden;
             Wave2.Visibility = volume > 33 ? Visibility.Visible : Visibility.Hidden;
             Wave3.Visibility = volume > 66 ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void SfxSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            UpdateSfxIcon(e.NewValue);
+            if (!_isSettingVolume)
+                SoundService.SfxVolume = e.NewValue;
+        }
+
+        private void UpdateSfxIcon(double volume)
+        {
+            SfxWave1.Visibility = volume > 0 ? Visibility.Visible : Visibility.Hidden;
+            SfxWave2.Visibility = volume > 33 ? Visibility.Visible : Visibility.Hidden;
+            SfxWave3.Visibility = volume > 66 ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void Resume_Click(object sender, RoutedEventArgs e) => ResumeClicked?.Invoke();
