@@ -121,14 +121,14 @@
 
         <!-- Startlights on countdown -->
         <Border x:Name="StartLights" Visibility="Collapsed" IsHitTestVisible="False"
-                HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
                 Background="#E6111111" CornerRadius="12" Padding="14,10">
             <StackPanel x:Name="StartLightsPanel" Orientation="Horizontal">
-                <Ellipse Width="44" Height="44" Margin="6"/>
-                <Ellipse Width="44" Height="44" Margin="6"/>
-                <Ellipse Width="44" Height="44" Margin="6"/>
-                <Ellipse Width="44" Height="44" Margin="6"/>
-                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
             </StackPanel>
         </Border>
 
@@ -145,7 +145,7 @@
            IsHitTestVisible="False"/>
 
 
-            <TextBlock x:Name="CenterText" Visibility="Collapsed" IsHitTestVisible="False"
+        <TextBlock x:Name="CenterText" Visibility="Collapsed" IsHitTestVisible="False"
                    FontSize="96" Foreground="White" TextAlignment="Center"
                    HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock.Effect>
@@ -176,9 +176,6 @@
                 <Rectangle Width="7" Height="22" RadiusX="2" RadiusY="2" Fill="White" Margin="7,0,0,0"/>
             </StackPanel>
         </Button>
-
-        <!-- DebugText: buiten World, fixed Top, Left op scherm -->
-        <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
         <overlays:PauseOverlay x:Name="PauseMenu" Visibility="Collapsed"/>
         <overlays:QuizOverlay x:Name="Quiz" Visibility="Collapsed"/>
