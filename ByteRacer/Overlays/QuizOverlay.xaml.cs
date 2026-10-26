@@ -85,8 +85,8 @@ namespace ByteRacer.Overlays
             Visibility = Visibility.Collapsed;
             LoadQuestion();
 
-            SoundService.PlayEffect(correct ? "correct.wav" : "wrong.wav",
-                        () => AnswerChecked?.Invoke(correct));
+            SoundService.PlayEffect(correct ? "correct.wav" : "wrong.wav");
+            AnswerChecked?.Invoke(correct);
         }
 
         /// <summary>

@@ -146,10 +146,6 @@ namespace ByteRacer.Views
             if (e.IsRepeat) return;
 
             if (e.Key == Key.Escape) TogglePause();
-
-#if DEBUG
-            HandleDebugKeys(e.Key);
-#endif
         }
 
         /// <summary>
@@ -169,33 +165,6 @@ namespace ByteRacer.Views
             _input.Clear();
             PauseGame();
         }
-
-#if DEBUG
-        private void HandleDebugKeys(Key key)
-        {
-            switch (key)
-            {
-                case Key.B:
-                    _car.ApplyEffect(1.5, 3);
-                    break;
-                case Key.N:
-                    _car.ApplyEffect(0.5, 3);
-                    break;
-                case Key.F:
-                    _gameState.Finish();
-                    break;
-                case Key.Q:
-                    OpenQuiz();
-                    break;
-                case Key.J:
-                    OnQuizAnswered(true);
-                    break;
-                case Key.K:
-                    OnQuizAnswered(false);
-                    break;
-            }
-        }
-#endif
 
         #endregion
 
@@ -671,7 +640,7 @@ namespace ByteRacer.Views
 
         #endregion
 
-        #region ------------------------- Volume tijdelijk -------------------------
+        #region ------------------------- Volume -------------------------
 
         /// <summary>
         /// Huidig volume 0 ~ 100.
