@@ -140,7 +140,9 @@
         </TextBlock>
 
         <hud:MiniMap x:Name="MiniMap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"></hud:MiniMap>
+        <hud:Speedometer x:Name="Speedometer" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10"/>
 
+        <!--Pause Knop-->
         <Button x:Name="PauseButton"
                 Width="56" Height="56"
                 Margin="16"
