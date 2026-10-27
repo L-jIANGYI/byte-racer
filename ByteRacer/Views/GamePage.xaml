@@ -15,24 +15,10 @@
 
     <Grid>
         <!-- Viewport: wat op scherm ziet -->
-        <Canvas x:Name="Viewport" Background="Aqua" ClipToBounds="True">
+        <Canvas x:Name="Viewport" ClipToBounds="True">
 
             <!-- World: Hele wereld -->
-            <Canvas x:Name="World">
-                <Canvas.Background>
-                    <DrawingBrush TileMode="Tile" Viewport="0,0,100,100" ViewportUnits="Absolute">
-                        <DrawingBrush.Drawing>
-                            <GeometryDrawing Brush="#3A7D44">
-                                <GeometryDrawing.Pen>
-                                    <Pen Brush="#4C8F55" Thickness="2"/>
-                                </GeometryDrawing.Pen>
-                                <GeometryDrawing.Geometry>
-                                    <RectangleGeometry Rect="0,0,100,100"/>
-                                </GeometryDrawing.Geometry>
-                            </GeometryDrawing>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Canvas.Background>
+            <Canvas x:Name="World" Background="#3A7D44">
 
                 <!-- Camera -->
                 <Canvas.RenderTransform>
@@ -121,7 +107,7 @@
 
         <!-- Startlights on countdown -->
         <Border x:Name="StartLights" Visibility="Collapsed" IsHitTestVisible="False"
-                HorizontalAlignment="Center" VerticalAlignment="Center"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,150"
                 Background="#E6111111" CornerRadius="12" Padding="14,10">
             <StackPanel x:Name="StartLightsPanel" Orientation="Horizontal">
                 <Ellipse Width="50" Height="50" Margin="6"/>
