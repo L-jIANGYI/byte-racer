@@ -9,36 +9,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Assets\Fonts\PressStart2P-Regular.ttf" />
-		<None Remove="Assets\Images\background.png" />
-		<None Remove="Assets\Sounds\menu-music.mp3" />
-		<None Remove="Assets\Images\Icons\python.png" />
-		<None Remove="Assets\Images\Icons\spdbst.png" />
-		<None Remove="Data\questions.json" />
+		<None Remove="Assets\Sounds\**" />
+		<None Remove="Assets\Images\**" />
+		<None Remove="Assets\Fonts\**\*.ttf" />
+		<None Remove="Data\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Assets\Sounds\menu-music.mp3">
+		<Content Include="Assets\Sounds\**\*.wav;Assets\Sounds\**\*.mp3">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Data\questions.json">
+		<Content Include="Data\**\*.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Resource Include="Assets\Fonts\PressStart2P-Regular.ttf">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-		</Resource>
-		<Resource Include="Assets\Images\Icons\python.png" />
-		<Resource Include="Assets\Images\Icons\spdbst.png" />
-		<Resource Include="Assets\Images\background.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Update="Assets\Fonts\OFL.txt">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-		</None>
+		<Resource Include="Assets\Images\**\*.png" />
+		<Resource Include="Assets\Fonts\**\*.ttf" />
 	</ItemGroup>
 
 </Project>

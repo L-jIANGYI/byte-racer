@@ -10,7 +10,7 @@
 
         <Button Content="Close" FontSize="12" Width="90" Height="40"
                 HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
-                Click="CloseButton_Click"/>
+                Click="CloseButton_Click" Style="{StaticResource PixelButton}"/>
 
         <Border Background="Black"
                 BorderBrush="#FFCC00"

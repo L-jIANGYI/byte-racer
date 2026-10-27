@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ByteRacer.Models
+﻿namespace ByteRacer.Models
 {
-    class UserSettings
+    public class UserSettings
     {
+        public double MusicVolume { get; set; } = 35;
+        public double SfxVolume { get; set; } = 75;
     }
 }

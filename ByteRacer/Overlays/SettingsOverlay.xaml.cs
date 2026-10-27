@@ -32,6 +32,9 @@ namespace ByteRacer.Overlays
             VolumeSlider.Value = SoundService.MusicVolume;
             UpdateVolumeIcon(VolumeSlider.Value);
 
+            //SfxSlider.Value = SoundService.SfxVolume;
+            //UpdateSfxIcon(SfxSlider.Value);
+
             _ready = true;
         }
 
@@ -62,5 +65,27 @@ namespace ByteRacer.Overlays
             Wave2.Visibility = volume > 33 ? Visibility.Visible : Visibility.Collapsed;
             Wave3.Visibility = volume > 66 ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        //private void SfxSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        //{
+        //    if (!_ready) return;
+
+        //    SoundService.SfxVolume = e.NewValue;
+        //    UpdateSfxIcon(e.NewValue);
+        //}
+
+        //private void SfxSlider_Released(object sender, MouseButtonEventArgs e)
+        //{
+        //    SoundService.PlayEffect("checkpoint.wav");
+        //}
+
+        //private void UpdateSfxIcon(double volume)
+        //{
+        //    if (SfxWave1 == null || SfxWave2 == null || SfxWave3 == null) return;
+
+        //    SfxWave1.Visibility = volume > 0 ? Visibility.Visible : Visibility.Collapsed;
+        //    SfxWave2.Visibility = volume > 33 ? Visibility.Visible : Visibility.Collapsed;
+        //    SfxWave3.Visibility = volume > 66 ? Visibility.Visible : Visibility.Collapsed;
+        //}
     }
 }

@@ -1,65 +1,135 @@
-﻿<UserControl x:Class="ByteRacer.Views.GamePage"
+<UserControl x:Class="ByteRacer.Views.GamePage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:game="clr-namespace:ByteRacer.Game"
              xmlns:overlays="clr-namespace:ByteRacer.Overlays"
-             mc:Ignorable="d" 
-             d:DesignHeight="2000" d:DesignWidth="3000 " d:Background="White"
+             xmlns:hud="clr-namespace:ByteRacer.Hud"
+             mc:Ignorable="d"
+             d:DesignHeight="2000"
+             d:DesignWidth="3000"
+             d:Background="White"
              Loaded="OnLoaded"
              Unloaded="OnUnloaded">
+
     <Grid>
         <!-- Viewport: wat op scherm ziet -->
-        <Canvas x:Name="Viewport" Background="Aqua" ClipToBounds="True">
+        <Canvas x:Name="Viewport" ClipToBounds="True">
 
             <!-- World: Hele wereld -->
-            <Canvas x:Name="World">
-                <Canvas.Background>
-                    <DrawingBrush TileMode="Tile" Viewport="0,0,100,100" ViewportUnits="Absolute">
-                        <DrawingBrush.Drawing>
-                            <GeometryDrawing Brush="#3A7D44">
-                                <GeometryDrawing.Pen>
-                                    <Pen Brush="#4C8F55" Thickness="2"/>
-                                </GeometryDrawing.Pen>
-                                <GeometryDrawing.Geometry>
-                                    <RectangleGeometry Rect="0,0,100,100"/>
-                                </GeometryDrawing.Geometry>
-                            </GeometryDrawing>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Canvas.Background>
+            <Canvas x:Name="World" Background="#3A7D44">
 
                 <!-- Camera -->
                 <Canvas.RenderTransform>
                     <TranslateTransform x:Name="Camera"/>
                 </Canvas.RenderTransform>
 
+                <!-- Witte rand -->
+                <Path
+    Data="{x:Static game:Track.Centerline}"
+    Stroke="White"
+    StrokeThickness="{x:Static game:Track.EdgeWidth}"
+    StrokeLineJoin="Round"
+    StrokeStartLineCap="Round"
+    StrokeEndLineCap="Round"/>
+
+                <!-- Asfalt -->
+                <Path
+                    x:Name="TrackPath"
+                    Data="{x:Static game:Track.Centerline}"
+                    Stroke="#555555"
+                    StrokeThickness="{x:Static game:Track.RoadWidth}"
+                    StrokeLineJoin="Round"
+                    StrokeStartLineCap="Round"
+                    StrokeEndLineCap="Round"/>
+
+                <!-- start/finishlijn -->
+                <Rectangle
+                    x:Name="StartFinishLine"
+                    Width="160"
+                    Height="24"
+                    Canvas.Left="1905"
+                    Canvas.Top="192"
+                    StrokeThickness="0"
+                    RenderTransformOrigin="0.5,0.5">
+
+                    <Rectangle.RenderTransform>
+                        <RotateTransform Angle="77.5"/>
+                    </Rectangle.RenderTransform>
+
+                    <Rectangle.Fill>
+                        <DrawingBrush
+                            TileMode="Tile"
+                            Viewport="0,0,20,12"
+                            ViewportUnits="Absolute">
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup>
+                                    <GeometryDrawing Brush="White">
+                                        <GeometryDrawing.Geometry>
+                                            <RectangleGeometry Rect="0,0,20,12"/>
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+
+                                    <GeometryDrawing Brush="Black">
+                                        <GeometryDrawing.Geometry>
+                                            <GeometryGroup>
+                                                <RectangleGeometry Rect="0,0,10,6"/>
+                                                <RectangleGeometry Rect="10,6,10,6"/>
+                                            </GeometryGroup>
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <!-- Ghost: de run van de #1 -->
+                <Grid x:Name="GhostVisual" Panel.ZIndex="1" Width="64" Height="32"
+                  RenderTransformOrigin="0.5,0.5" Opacity="0.45"
+                  Visibility="Collapsed" IsHitTestVisible="False">
+                                <Grid.RenderTransform>
+                                    <RotateTransform x:Name="GhostRotation"/>
+                                </Grid.RenderTransform>
+                                <Image Source="pack://application:,,,/Assets/Images/carsprite.png"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                </Grid>
                 <!-- Auto: in World Canvas, met World bewegen -->
-                <Grid x:Name="CarVisual" Width="44" Height="22" RenderTransformOrigin="0.5,0.5">
+                <Grid x:Name="CarVisual" Panel.ZIndex="2" Width="64" Height="32" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <RotateTransform x:Name="CarRotation"></RotateTransform>
                     </Grid.RenderTransform>
-                    <Border Background="Red" CornerRadius="5"></Border>
-                    <Border Background="DarkGray" Width="7" HorizontalAlignment="Right" Margin="0,3,7,3" CornerRadius="2"></Border>
+                    <Image Source="pack://application:,,,/Assets/Images/carsprite.png"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor"></Image>
                 </Grid>
             </Canvas>
         </Canvas>
 
         <!-- Startlights on countdown -->
         <Border x:Name="StartLights" Visibility="Collapsed" IsHitTestVisible="False"
-                HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,150"
                 Background="#E6111111" CornerRadius="12" Padding="14,10">
             <StackPanel x:Name="StartLightsPanel" Orientation="Horizontal">
-                <Ellipse Width="44" Height="44" Margin="6"/>
-                <Ellipse Width="44" Height="44" Margin="6"/>
-                <Ellipse Width="44" Height="44" Margin="6"/>
-                <Ellipse Width="44" Height="44" Margin="6"/>
-                <Ellipse Width="44" Height="44" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
+                <Ellipse Width="50" Height="50" Margin="6"/>
             </StackPanel>
         </Border>
 
         <TextBlock x:Name="RaceTimeText" Text="00:00.00" FontSize="28" Foreground="White"
                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0"/>
+
+        <TextBlock x:Name="LapText"
+           Text="Lap 1 / 3"
+           FontSize="24"
+           Foreground="White"
+           HorizontalAlignment="Right"
+           VerticalAlignment="Bottom"
+           Margin="0,0,24,24"
+           IsHitTestVisible="False"/>
+
 
         <TextBlock x:Name="CenterText" Visibility="Collapsed" IsHitTestVisible="False"
                    FontSize="96" Foreground="White" TextAlignment="Center"
@@ -68,6 +138,8 @@
                 <DropShadowEffect BlurRadius="16" ShadowDepth="0" Opacity="0.8"/>
             </TextBlock.Effect>
         </TextBlock>
+
+        <hud:MiniMap x:Name="MiniMap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"></hud:MiniMap>
 
         <Button x:Name="PauseButton"
                 Width="56" Height="56"
@@ -91,11 +163,8 @@
             </StackPanel>
         </Button>
 
-        <!-- DebugText: buiten World, fixed Top, Left op scherm -->
-        <TextBlock x:Name="DebugText" Foreground="White" FontFamily="Consolas" FontSize="16" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-
         <overlays:PauseOverlay x:Name="PauseMenu" Visibility="Collapsed"/>
         <overlays:QuizOverlay x:Name="Quiz" Visibility="Collapsed"/>
     </Grid>
-    
+
 </UserControl>
