@@ -2,7 +2,6 @@
 using ByteRacer.Models;
 using ByteRacer.Services;
 using System.Diagnostics;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,11 +16,6 @@ namespace ByteRacer.Views
     /// </summary>
     public partial class GamePage : UserControl
     {
-        // even testen voor minimap
-        private static readonly Geometry TestTrack = Geometry.Parse(
-            "M 1750,300 C 2200,0 3250,300 2650,800 C 2650,800 2800,2000 2350,1100 " +
-            "C 1525,1400 1000,1100 1000,1100 C 625,275 1150,50 1750,300 Z");
-
         #region ---------------------- Properties -------------------------
 
         private readonly MainWindow _main;
@@ -52,10 +46,20 @@ namespace ByteRacer.Views
 
         private readonly List<QuizBlock> _blocks = new List<QuizBlock>();
 
+        private static readonly Geometry RoadArea =
+            Track.Centerline.GetWidenedPathGeometry(new Pen(Brushes.Black, Track.RoadWidth));
+
         // ---------- Ghost ----------
         private readonly GhostRecorder _recorder = new GhostRecorder();
+
         private readonly GhostPlayer? _ghostPlayer;
+
+        // ---------- Geluid ----------
+        private int _lastLightsOn; // vorige frame: hoeveel lichten aan
+        private RaceState _lastState = RaceState.Countdown;
+
         #endregion
+
         public GamePage(MainWindow main, string playerName = "")
         {
             InitializeComponent();
@@ -93,7 +97,7 @@ namespace ByteRacer.Views
             _car.Angle = 0;
             _car.Speed = 0;
 
-            MiniMap.Setup(TestTrack, 160);
+            MiniMap.Setup(Track.Centerline, Track.RoadWidth);
 
             UpdateCamera(0, true);
 
@@ -104,6 +108,8 @@ namespace ByteRacer.Views
             _clock.Start();
             _lastFrameTime = _clock.Elapsed;
             CompositionTarget.Rendering += OnFrame;
+
+            SoundService.StartEngine("engine.wav");
         }
 
         /// <summary>
@@ -146,10 +152,6 @@ namespace ByteRacer.Views
             if (e.IsRepeat) return;
 
             if (e.Key == Key.Escape) TogglePause();
-
-#if DEBUG
-            HandleDebugKeys(e.Key);
-#endif
         }
 
         /// <summary>
@@ -170,33 +172,6 @@ namespace ByteRacer.Views
             PauseGame();
         }
 
-#if DEBUG
-        private void HandleDebugKeys(Key key)
-        {
-            switch (key)
-            {
-                case Key.B:
-                    _car.ApplyEffect(1.5, 3);
-                    break;
-                case Key.N:
-                    _car.ApplyEffect(0.5, 3);
-                    break;
-                case Key.F:
-                    _gameState.Finish();
-                    break;
-                case Key.Q:
-                    OpenQuiz();
-                    break;
-                case Key.J:
-                    OnQuizAnswered(true);
-                    break;
-                case Key.K:
-                    OnQuizAnswered(false);
-                    break;
-            }
-        }
-#endif
-
         #endregion
 
         #region ------------------------- Elke frame gebeurt -------------------------
@@ -207,8 +182,6 @@ namespace ByteRacer.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// 
-
-
         private void OnFrame(object? sender, EventArgs e)
         {
             // Voorkom dubbele updates in hetzelfde frame
@@ -222,50 +195,65 @@ namespace ByteRacer.Views
             _lastFrameTime = now;
 
             _gameState.Update(dt);
+            PlayStartSounds();
 
             switch (_gameState.State)
             {
                 case RaceState.Racing:
+                {
+                    bool onTrack = RoadArea.FillContains(new Point(_car.X, _car.Y));
+                    _car.Update(dt, _input.Read(), onTrack);
+                    KeepCarInWorld();
+
+                    // Quizblokken bijwerken en botsingen controleren.
+                    UpdateBlocks(dt);
+
+                    int checkpointBefore = _lapTracker.NextCheckpoint;
+                    int lapBefore = _lapTracker.LapCount;
+
+                    // Controleren of de auto de start-/finishlijn bereikt.
+                    bool isAtStartFinishLine = IsCarAtStartFinishLine();
+
+                    bool raceFinished = _lapTracker.Update(
+                        _car.X,
+                        _car.Y,
+                        isAtStartFinishLine);
+
+                    // Record every racing frame, including the final position.
+                    _recorder.Record(_gameState.RaceTime, _car, force: raceFinished);
+
+                    if (raceFinished)
                     {
-                        _car.Update(dt, _input.Read(), onTrack: true);
-                        KeepCarInWorld();
-
-                        // Quizblokken bijwerken en botsingen controleren.
-                        UpdateBlocks(dt);
-
-                        // Controleren of de auto de start-/finishlijn bereikt.
-                        bool isAtStartFinishLine = IsCarAtStartFinishLine();
-
-                        bool raceFinished = _lapTracker.Update(
-                            _car.X,
-                            _car.Y,
-                            isAtStartFinishLine);
-
-                        // Record every racing frame, including the final position.
-                        _recorder.Record(_gameState.RaceTime, _car, force: raceFinished);
-
-                        if (raceFinished)
-                        {
-                            _gameState.Finish();
-                        }
-
-                        break;
+                        SoundService.PlayEffect("finish.wav");
+                        _gameState.Finish();
                     }
+                    else if (_lapTracker.LapCount > lapBefore)
+                    {
+                        SoundService.PlayEffect("lap.wav");
+                    }
+                    else if (_lapTracker.NextCheckpoint > checkpointBefore)
+                    {
+                        SoundService.PlayEffect("checkpoint.wav");
+                    }
+
+                    break;
+                }
 
                 case RaceState.Finished:
+                {
+                    _car.Update(dt, CarInput.None, onTrack: true);
+                    KeepCarInWorld();
+
+                    if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
                     {
-                        _car.Update(dt, CarInput.None, onTrack: true);
-                        KeepCarInWorld();
-
-                        if (_gameState.StateTime >= GameSettings.FinishScreenSeconds)
-                        {
-                            StopLoop();
-                            SaveResultAndShowLeaderboard();
-                            return;
-                        }
-
-                        break;
+                        StopLoop();
+                        SoundService.StopEngine();
+                        SaveResultAndShowLeaderboard();
+                        return;
                     }
+
+                    break;
+                }
             }
 
             UpdateCheckpoints();
@@ -273,7 +261,8 @@ namespace ByteRacer.Views
             DrawGhost();
             UpdateCamera(dt);
             DrawHud();
-            //DrawDebug();
+
+            SoundService.UpdateEngine(Math.Abs(_car.Speed) / _car.MaxSpeed);
         }
 
 
@@ -495,6 +484,29 @@ namespace ByteRacer.Views
         }
 
         /// <summary>
+        /// 'countdown.wav' bij elk startlicht en 'go' als de lichten uitgaan.
+        /// </summary>
+        private void PlayStartSounds()
+        {
+            RaceState state = _gameState.State;
+
+            // Alleen tijdens de countdown bijhouden: in pauze is LightsOn 0,
+            // anders zou na 'Doorgaan' hetzelfde licht nog een keer piepen.
+            if (state == RaceState.Countdown)
+            {
+                int lightsOn = _gameState.LightsOn;
+                if (lightsOn > _lastLightsOn) SoundService.PlayEffect("countdown.wav");
+                _lastLightsOn = lightsOn;
+            }
+
+            // Countdown → Racing = lichten uit
+            if (_lastState == RaceState.Countdown && state == RaceState.Racing)
+                SoundService.PlayEffect("go.wav");
+
+            _lastState = state;
+        }
+
+        /// <summary>
         /// Helper function, racetijd formaten
         /// </summary>
         /// <param name="seconds"></param>
@@ -529,16 +541,6 @@ namespace ByteRacer.Views
             _main.ShowLeaderboard(result);
         }
 
-        //private void DrawDebug()
-        //{
-        //    double kmh = Math.Abs(_car.Speed) * GameSettings.MetersPerPixel * 3.6;
-        //    DebugText.Text = $"state   {_gameState.State}  ({_gameState.StateTime:0.0}s)\n" +
-        //                     $"{kmh:0} km/h\n" +
-        //                     $"effect  x{_car.SpeedMultiplier:0.0}  {_car.EffectTimeLeft:0.0}s\n" +
-        //                     $"volume  {GetVolume():0}\n" + $"{_playerName}"
-        //        ;
-        //}
-
         #endregion
 
         #region ------------------------- Pauze -------------------------
@@ -552,6 +554,7 @@ namespace ByteRacer.Views
 
             _gameState.Pause();
             _input.Clear();
+            SoundService.PauseEngine();
             PauseMenu.Show(GetVolume());
         }
 
@@ -565,6 +568,7 @@ namespace ByteRacer.Views
             _input.Clear();
             _gameState.Resume();
             PauseMenu.Hide();
+            SoundService.ResumeEngine();
         }
 
         /// <summary>
@@ -584,7 +588,11 @@ namespace ByteRacer.Views
         /// <summary>
         /// Terug naar start
         /// </summary>
-        private void ExitToStart() => _main.ShowStart();
+        private void ExitToStart()
+        {
+            SoundService.StopEngine();
+            _main.ShowStart();
+        }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e) => TogglePause();
 
@@ -600,6 +608,7 @@ namespace ByteRacer.Views
             if (!_gameState.CanStartQuiz) return;
             _gameState.StartQuiz();
             _input.Clear();
+            SoundService.PauseEngine();
             Quiz.Show();
         }
 
@@ -614,8 +623,8 @@ namespace ByteRacer.Views
             double multiplier = correct ? GameSettings.QuizBoost : GameSettings.QuizPenalty;
             _car.ApplyEffect(multiplier, GameSettings.QuizEffectSeconds);
 
-            _input.Clear();
             _gameState.EndQuiz();
+            SoundService.ResumeEngine();
         }
 
         /// <summary>
@@ -664,7 +673,9 @@ namespace ByteRacer.Views
 
                 double dx = _car.X - block.X;
                 double dy = _car.Y - block.Y;
-                double distance = Math.Sqrt(dx * dx + dy * dy); // pythagoras heb ik oprecht al 4 jaar niet meer gebruikt, shit's crazy
+                double
+                    distance = Math.Sqrt(dx * dx +
+                                         dy * dy); // pythagoras heb ik oprecht al 4 jaar niet meer gebruikt, shit's crazy
 
                 if (distance > QuizBlock.HitDistance) continue;
                 if (!_gameState.CanStartQuiz) return;
@@ -679,9 +690,10 @@ namespace ByteRacer.Views
                 return;
             }
         }
+
         #endregion
 
-        #region ------------------------- Volume tijdelijk -------------------------
+        #region ------------------------- Volume -------------------------
 
         /// <summary>
         /// Huidig volume 0 ~ 100.
