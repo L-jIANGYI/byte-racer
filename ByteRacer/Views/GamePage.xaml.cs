@@ -79,7 +79,7 @@ namespace ByteRacer.Views
             Quiz.AnswerChecked += OnQuizAnswered;
             CreateBlocks();
 
-            
+
             GhostData? ghost = GhostService.LoadBest();
             _ghostPlayer = ghost == null ? null : new GhostPlayer(ghost.Samples);
         }
@@ -448,7 +448,9 @@ namespace ByteRacer.Views
         {
             RaceTimeText.Text = FormatTime(_gameState.RaceTime);
             DrawStartLights();
+
             MiniMap.UpdateCar(_car.X, _car.Y, _car.Angle);
+            Speedometer.Update(_car);
             // toon het huidige lap en het max aantal lap
             LapText.Text = $"Lap {Math.Min(_lapTracker.LapCount, _lapTracker.LapMax)} / {_lapTracker.LapMax}";
 
