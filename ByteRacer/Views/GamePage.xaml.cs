@@ -79,6 +79,7 @@ namespace ByteRacer.Views
             Quiz.AnswerChecked += OnQuizAnswered;
             CreateBlocks();
 
+            
             GhostData? ghost = GhostService.LoadBest();
             _ghostPlayer = ghost == null ? null : new GhostPlayer(ghost.Samples);
         }

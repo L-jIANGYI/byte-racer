@@ -55,7 +55,7 @@
                 </Grid>
 
                 <!-- sounds effect row -->
-                <Grid Margin="0,20,0,0">
+                <!--<Grid Margin="0,20,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -79,7 +79,7 @@
                             PreviewMouseLeftButtonUp="SfxSlider_Released"
                             VerticalAlignment="Center"
                             Margin="25,0,0,0"/>
-                </Grid>
+                </Grid>-->
 
 
                 <UniformGrid Columns="3" Margin="0,35,0,0">

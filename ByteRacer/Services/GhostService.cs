@@ -21,9 +21,9 @@ namespace ByteRacer.Services
                 Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
                 File.WriteAllText(FilePath, JsonSerializer.Serialize(ghost));
             }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            catch 
             {
-                Debug.WriteLine($"Ghost opslaan mislukt: {ex.Message}");
+                
             }
         }
 
@@ -45,9 +45,8 @@ namespace ByteRacer.Services
 
                 return ghost;
             }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+            catch 
             {
-                Debug.WriteLine($"Ghost laden mislukt: {ex.Message}");
                 return null;
             }
         }
