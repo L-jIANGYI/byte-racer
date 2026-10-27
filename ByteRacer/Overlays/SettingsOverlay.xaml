@@ -48,7 +48,8 @@
 
                     <Slider x:Name="VolumeSlider"
                     Grid.Column="1"
-                    Minimum="0" Maximum="100" Value="50"
+                    Minimum="0" Maximum="100"
+                    IsMoveToPointEnabled="True"
                     ValueChanged="VolumeSlider_ValueChanged"
                     VerticalAlignment="Center"
                     Margin="25,0,0,0"/>
