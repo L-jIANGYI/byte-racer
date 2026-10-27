@@ -2,7 +2,7 @@
 {
     public class UserSettings
     {
-        public double MusicVolume { get; set; } = 50;
-        public double SfxVolume { get; set; } = 35;
+        public double MusicVolume { get; set; } = 35;
+        public double SfxVolume { get; set; } = 75;
     }
 }
